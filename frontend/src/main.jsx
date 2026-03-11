@@ -4,12 +4,15 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/authContext.jsx";
+import { Provider } from "@/components/ui/provider";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <BrowserRouter>
             <AuthProvider>
-                <App />
+                <Provider>
+                    <App />
+                </Provider>
             </AuthProvider>
         </BrowserRouter>
     </StrictMode>,
