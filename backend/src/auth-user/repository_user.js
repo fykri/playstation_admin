@@ -20,7 +20,7 @@ const findByUsername = async (username) => {
             [username],
         );
         if (!result.rows[0] || result.rows[0].length > 0)
-            throwStatus("username dan password tidak ditemukan", 404);
+            throwStatus("username dan password salah", 404);
         return result.rows[0];
     } catch (error) {
         throw error;

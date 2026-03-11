@@ -1,8 +1,8 @@
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/Login";
-import PersistLogin from "./component/authcompt/PersistLogin";
-import ProtectedRoute from "./component/authcompt/ProtectedRoute";
+import PersistLogin from "./components/authcompt/PersistLogin";
+import ProtectedRoute from "./components/authcompt/ProtectedRoute";
 import DashboardPage from "./pages/Dashboard";
 function App() {
     return (
