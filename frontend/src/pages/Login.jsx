@@ -1,8 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { login } from "../api/authApi";
 import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
 //cakra ui
 import { Input, InputGroup, Button } from "@chakra-ui/react";
@@ -14,6 +13,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isError, setIsError] = useState("");
+    const [loading, setLoading] = useState(false);
     const { setAccessToken } = useContext(AuthContext);
     const usernameRef = useRef(null);
     const passwordRef = useRef(null);
@@ -25,16 +25,24 @@ const LoginPage = () => {
         }
     };
 
+    useEffect(() => {
+        usernameRef.current.focus();
+    }, []);
+
     const navigate = useNavigate();
     async function handleLogin(e) {
         e.preventDefault();
-        setIsError("")
+        setIsError("");
+        setLoading(true);
         try {
             const result = await login(username, password);
             setAccessToken(result.accessToken);
             navigate("/dashboard");
         } catch (error) {
+            setLoading(false);
             setIsError(error.response.data.message);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -71,7 +79,14 @@ const LoginPage = () => {
                             css={{ "--focus-color": "secondary" }}
                         ></PasswordInput>
                     </InputGroup>
-                    <Button type="submit">Login</Button>
+                    <Button
+                        type="submit"
+                        loading={loading}
+                        loadingText="Loading"
+                        spinnerPlacement="start"
+                    >
+                        Login
+                    </Button>
                 </form>
             </div>
         </div>
