@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #181823;
-  --color-secondary: #F3F4F4;
+/*@theme {
+    --color-primary: #181823;
+    --color-secondary: #f3f4f4;
+}*/
+
+:root {
+    --color-primary: #181823;
+    --color-secondary: #f3f4f4;
+}
+
+body {
+    min-height: 100vh;
+    font-family: system-ui, sans-serif;
+    background-color: var(--color-primary);
+}
+
+#root {
+    min-height: 100vh;
 }
 /*#root {
   max-width: 1280px;

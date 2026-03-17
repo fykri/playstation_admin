@@ -47,11 +47,11 @@ const LoginPage = () => {
     }
 
     return (
-        <div className="flex justify-center items-center min-w-77 sm:w-86 py-4 rounded-sm ">
+        <div className="w-screen h-screen flex justify-center items-center">
             <div className="w-[90%] flex flex-col items-center gap-7">
                 <ErrorMessage message={isError}></ErrorMessage>
-                <header className="min-w-15 min-h-15 flex items-center justify-center bg-secondary rounded-t-xl rounded-br-2xl">
-                    <FaLock size={34} className="text-primary" />
+                <header className="min-w-15 min-h-15 flex items-center justify-center bg-(--color-secondary) rounded-t-xl rounded-br-2xl">
+                    <FaLock size={34} className="text-(--color-primary)" />
                 </header>
                 <form className="flex flex-col gap-4" onSubmit={handleLogin}>
                     <InputGroup startElement={<LuUser />}>
