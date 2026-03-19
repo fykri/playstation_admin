@@ -1,4 +1,4 @@
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex} from "@chakra-ui/react";
 import Sidebar from "../components/navbar/SideBar";
 
 const NavbarLayout = ({ children }) => {
