@@ -56,20 +56,20 @@ const SideBar = () => {
             className={`flex flex-col ${isOpen ? "w-77.5" : "w-22"} transition-all duration-150 relative bg-[#15151f] h-screen border-r-2!`}
         >
             <HStack mt={8} pr={5} pl={4} mb={4}>
-                <Box flex={2} display="flex" gap={4} h="68px">
+                <Box flex={2} display="flex" gap={4} h="62px">
                     <Avatar.Root display="flex" alignSelf={"center"} size="xl">
                         <Avatar.Fallback name="PS Admin"></Avatar.Fallback>
                     </Avatar.Root>
                     {isOpen && (
                         <Flex direction="column" gap={1}>
                             <Heading
-                                size="2xl"
+                                size="xl"
                                 color="var(--color-secondary)"
                                 fontWeight={"bold"}
                             >
                                 PS ADMIN
                             </Heading>
-                            <Text color="var(--color-secondary)">
+                            <Text color="var(--color-secondary)" fontSize='sm'>
                                 14/03/2006
                             </Text>
                         </Flex>
@@ -104,7 +104,7 @@ const SideBar = () => {
                                 <NavLink
                                     to={`/${item.name.toLowerCase()}`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-4 p-4! rounded-sm ${
+                                        `flex items-center gap-5 p-4! rounded-sm ${
                                             isActive
                                                 ? "bg-(--color-secondary) text-(--color-primary)!"
                                                 : "text-(--color-secondary) hover:bg-[#dadbdb] hover:text-(--color-primary)!"
@@ -113,7 +113,7 @@ const SideBar = () => {
                                 >
                                     <Icon size="xl" as={item.icon} />
                                     {isOpen && (
-                                        <Text fontSize="lg">{item.name}</Text>
+                                        <Text fontSize={17} fontWeight={"semibold"}>{item.name}</Text>
                                     )}
                                 </NavLink>
                             </li>
