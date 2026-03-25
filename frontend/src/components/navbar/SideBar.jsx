@@ -31,28 +31,9 @@ const BarMenu = [
 
 const SideBar = () => {
     const [isOpen, setIsOpen] = useState(true);
-    const sideBarRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                sideBarRef.current &&
-                !sideBarRef.current.contains(event.target)
-            ) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
 
     return (
         <div
-            ref={sideBarRef}
             className={`flex flex-col ${isOpen ? "w-77.5" : "w-22"} transition-all duration-150 relative bg-[#15151f] h-screen border-r-2!`}
         >
             <HStack mt={8} pr={5} pl={4} mb={4}>

@@ -1,4 +1,4 @@
-import { Dialog, Stack, CloseButton} from "@chakra-ui/react";
+import { Dialog, Stack, CloseButton , Button} from "@chakra-ui/react";
 import DialogTrigger from "@/components/dialog/DialogTrigger";
 import DialogHeader from "@/components/dialog/DialogHeader";
 import DialogFooter from "@/components/dialog/DialogFooter";
