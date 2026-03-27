@@ -19,17 +19,20 @@ app.use(express.static(path.join(__dirname, "public")));
 const verifyToken = require("./src/auth-user/middleware/middleware_auth");
 
 const authUser = require("./src/auth-user/controller_user");
+const consoles = require('./src/console/controller_console')
 app.use("/auth", authUser);
-app.get("/test", verifyToken, (req, res, next) => {
-    try {
-        res.status(200).json({
-            message: "berhasil",
-            success: true,
-        });
-    } catch (error) {
-        throw error;
-    }
-});
+app.use("/consoles", consoles);
+
+//app.get("/test", verifyToken, (req, res, next) => {
+//    try {
+//        res.status(200).json({
+//            message: "berhasil",
+//            success: true,
+//        });
+//    } catch (error) {
+//        throw error;
+//    }
+//});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
@@ -43,6 +46,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
+    console.log("err.message: ", err.message)
     res.status(err.status || 500).json({
         success: false,
         message: err.message || "Internal Server Error",
