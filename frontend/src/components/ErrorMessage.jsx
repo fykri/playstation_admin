@@ -11,7 +11,7 @@ const ErrorMessage = ({ message }) => {
     if (!message || !isOpen) return null;
 
     return (
-        <Alert.Root status="error" borderRadius="md" position="relative">
+        <Alert.Root status="error" borderRadius="md" w='lg'>
             <Alert.Indicator />
             <Alert.Content>
                 <Alert.Title>Error</Alert.Title>

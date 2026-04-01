@@ -48,8 +48,8 @@ const LoginPage = () => {
 
     return (
         <div className="w-screen h-screen flex justify-center items-center">
-            <div className="w-[90%] flex flex-col items-center gap-7">
-                <ErrorMessage message={isError}></ErrorMessage>
+            <div className="w-[90%] flex flex-col items-center gap-7 ">
+                <ErrorMessage message={isError}></ErrorMessage> 
                 <header className="min-w-15 min-h-15 flex items-center justify-center bg-(--color-secondary) rounded-t-xl rounded-br-2xl">
                     <FaLock size={34} className="text-(--color-primary)" />
                 </header>

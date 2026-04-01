@@ -1,11 +1,11 @@
 import { Dialog, Button } from "@chakra-ui/react";
-const DialogFooter = ({ cancelTitle, saveTitle }) => {
+const DialogFooter = ({ cancelTitle, saveTitle, onClick, loading, colorPalette = 'teal' }) => {
     return (
         <Dialog.Footer>
             <Dialog.ActionTrigger asChild>
                 <Button variant="outline">{cancelTitle}</Button>
             </Dialog.ActionTrigger>
-            <Button colorPalette={"teal"}>{saveTitle}</Button>
+            <Button colorPalette={colorPalette} onClick={onClick} loading={loading}>{saveTitle}</Button>
         </Dialog.Footer>
     );
 };

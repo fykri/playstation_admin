@@ -33,7 +33,6 @@ const addConsole = async ({
 const getConsoleData = async () => {
     try {
         const result = await selectConsole();
-        if (result.rowCount === 0) throwStatus("data console kosong");
         return result.rows;
     } catch (error) {
         throw error;

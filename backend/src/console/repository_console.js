@@ -10,7 +10,7 @@ const insertConsole = async (console_type, quantity, package, hourly_price) => {
 };
 
 const selectConsole = async () => {
-    const result = await pool.query("SELECT * FROM console");
+    const result = await pool.query("SELECT * FROM console ORDER BY id_console ASC");
     return result;
 };
 

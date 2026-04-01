@@ -12,7 +12,13 @@ router.get("/", async (req, res, next) => {
         const result = await getConsoleData();
         res.status(200).json({
             message: "data exists",
-            data: result,
+            data: result.map((e)=> ({
+                id_console: e.id_console,
+                console_type: e.console_type,
+                hourly_price:e.hourly_price,
+                package: e.package,
+                quantity: e.quantity
+            })),
         });
     } catch (error) {
         next(error);

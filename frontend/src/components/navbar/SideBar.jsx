@@ -18,7 +18,7 @@ import {
     MdOutlineArrowForwardIos,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 const BarMenu = [
     { name: "Dashboard", icon: MdDashboard },
@@ -34,9 +34,9 @@ const SideBar = () => {
 
     return (
         <div
-            className={`flex flex-col ${isOpen ? "w-77.5" : "w-22"} transition-all duration-150 relative bg-[#15151f] h-screen border-r-2!`}
+            className={`flex flex-col ${isOpen ? "w-65 xl:w-77.5" : "w-22"} transition-all relative duration-150 min-h-screen bg-[#15151f]  border-r-2!`}
         >
-            <HStack mt={8} pr={5} pl={4} mb={4}>
+            <HStack mt={8} pr={5} pl={4} mb={4} >
                 <Box flex={2} display="flex" gap={4} h="62px">
                     <Avatar.Root display="flex" alignSelf={"center"} size="xl">
                         <Avatar.Fallback name="PS Admin"></Avatar.Fallback>
@@ -94,7 +94,7 @@ const SideBar = () => {
                                 >
                                     <Icon size="xl" as={item.icon} />
                                     {isOpen && (
-                                        <Text fontSize={17} fontWeight={"semibold"}>{item.name}</Text>
+                                        <Text fontSize={16} fontWeight={"semibold"}>{item.name}</Text>
                                     )}
                                 </NavLink>
                             </li>
