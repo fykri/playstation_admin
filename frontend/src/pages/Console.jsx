@@ -47,7 +47,6 @@ const Console = () => {
     const [dataConsole, setDataConsole] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
-    const [dialogEdit, setDialogEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dataField, setDataField] = useState({
         console_type: '',
@@ -60,25 +59,21 @@ const Console = () => {
         type_console: '',
         package: '',
     });
-    const [error, setError] = useState('');
 
     const [editId, setEditId] = useState(null);
     const [formEdit, setFormEdit] = useState({});
 
-    console.log('id edit: ', formEdit);
-    console.log('data: ', dataConsole);
     //Paginations
     const { page, setPage, currentData, pageSize, count, resetPage } = usePagination(dataConsole, 8);
 
     // menampilkan data di tabel
     const fetchData = async () => {
-        setError('');
         try {
             const result = await getAllConsole();
             console.log('result: ', result);
             setDataConsole(result);
         } catch (error) {
-            setError(error.message);
+            console.log(error.message)
         } finally {
             setLoading(false);
         }
@@ -115,7 +110,6 @@ const Console = () => {
             resetField();
             await fetchData();
         } catch (error) {
-            setError(error.message);
             toaster.create({
                 title: error.message,
                 type: 'error',
@@ -128,7 +122,6 @@ const Console = () => {
 
     const handleUpdate = async () => {
         setLoading(true);
-        setError('');
         try {
             const oldItem = dataConsole.find(item => item.id_console === editId);
             const data = filteringObject(oldItem, formEdit);
@@ -158,7 +151,6 @@ const Console = () => {
 
     const handleDeleteData = async () => {
         setLoading(true);
-        setError('');
         try {
             await deleteConsole(fieldDeleteConsole.id_console);
             toaster.create({
@@ -167,7 +159,6 @@ const Console = () => {
             });
             await fetchData();
         } catch (error) {
-            setError(error.message);
             toaster.create({
                 title: error.message,
                 type: 'error',
