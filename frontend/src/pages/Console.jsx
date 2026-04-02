@@ -238,11 +238,8 @@ const Console = () => {
             </AlertDialog>
             {/* end dialog delete data */}
             {/* END DIALOG */}
-            <header>
-                <Heading borderBottom={'1px solid white'} size={'2xl'} letterSpacing={2}>
-                    CONSOLE
-                </Heading>
-            </header>
+
+            {/* Content Console */}
             <Box mt={8}>
                 <Button onClick={() => setOpenDialog(true)}>Tambah Data </Button>
                 <Box mt={3}>
@@ -252,6 +249,8 @@ const Console = () => {
                             title="Data konsol kosong"
                         />
                     ) : (
+
+                        // TABLE CONSOLE
                         <Box
                             display="flex"
                             flexDirection="column"
@@ -347,9 +346,11 @@ const Console = () => {
                                 <Paginations pageSize={pageSize} page={page} setPage={setPage} items={dataConsole} />
                             )}
                         </Box>
+                        // END Table Console
                     )}
                 </Box>
             </Box>
+            {/* End Content Console */}
         </NavbarLayout>
     );
 };
