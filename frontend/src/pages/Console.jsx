@@ -172,7 +172,7 @@ const Console = () => {
     // Buat Dialog: ketika field di enter maka akan lanjut ke field berikutnya
     const { setRef, handleKeyDown } = useEnterNavigation(data.length, handleSubmitAddConsole, openDialog);
     return (
-        <NavbarLayout>
+        <NavbarLayout header={'CONSOLE'}>
             <Toaster />
             {/* DIALOG */}
             <DialogLayout
