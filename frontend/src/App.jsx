@@ -5,6 +5,7 @@ import PersistLogin from "./components/authcompt/PersistLogin";
 import ProtectedRoute from "./components/authcompt/ProtectedRoute";
 import DashboardPage from "./pages/Dashboard";
 import Console from "./pages/Console";
+import Station from "./pages/Station";
 function App() {
     return (
         <Routes>
@@ -14,6 +15,7 @@ function App() {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/consoles" element={<Console />} />
+                    <Route path="/station" element={<Station/>}></Route>
                 </Route>
             </Route>
         </Routes>
