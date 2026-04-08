@@ -2,10 +2,10 @@ import { Box, HStack, Badge, VStack, Heading, Text } from "@chakra-ui/react";
 
 const CardHeadStation = ({status}) => {
     return (
-        <Box flex={1} w={'95%'} color={''} borderTop={'2px solid gray'}>
+        <Box flex={1} w={'95%'} color={'var(--color-secondary)'} borderTop={'2px solid gray'}>
             <HStack justifyContent={'space-between'} mt={1}>
                 <Badge variant={'surface'}>Reguler</Badge>
-                <Badge variant={''} colorPalette={'red'}>
+                <Badge>
                     {status}
                 </Badge>
             </HStack>

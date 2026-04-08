@@ -4,7 +4,7 @@ import CardBodyStationEmpty from './CardBodyStationEmpty';
 import CardBodyStationUsed from './CardBodyStationUsed';
 const CardStation = ({ status = 'kosong' }) => {
     return (
-        <VStack w={'52'} h={'60'} mt={10} rounded={'sm'} bg={'var(--color-container)'} boxShadow={'md'}>
+        <VStack w={'52'} h={'60'} rounded={'sm'} bg={'var(--color-container)'} boxShadow={'md'}>
             {/* Header */}
             <CardHeadStation status={status} />
             {/* EndHeader */}

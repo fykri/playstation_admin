@@ -34,7 +34,7 @@ const SideBar = () => {
 
     return (
         <div
-            className={`flex flex-col ${isOpen ? "w-65 xl:w-77.5" : "w-22"} transition-all relative duration-150 min-h-screen bg-(--color-container) border-r-2!`}
+            className={`flex flex-col ${isOpen ? "w-65" : "w-22"} transition-all relative duration-150 min-h-screen bg-(--color-container) border-r-2!`}
         >
             <HStack mt={8} pr={5} pl={4} mb={4} >
                 <Box flex={2} display="flex" gap={4} h="62px">
