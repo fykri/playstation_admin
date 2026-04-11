@@ -70,7 +70,6 @@ const Console = () => {
     const fetchData = async () => {
         try {
             const result = await getAllConsole();
-            console.log('result: ', result);
             setDataConsole(result);
         } catch (error) {
             console.log(error.message)
