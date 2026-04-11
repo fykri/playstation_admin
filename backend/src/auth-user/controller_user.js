@@ -39,7 +39,6 @@ router.get("/getToken", async (req, res, next) => {
     try {
         const { refreshToken } = req.cookies;
         const accessToken  = await getToken(refreshToken);
-        console.log(accessToken)
         return res.status(200).json({
             success: true,
             message: "token berhasil didapatkan",

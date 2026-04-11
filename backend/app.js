@@ -20,7 +20,9 @@ const verifyToken = require("./src/auth-user/middleware/middleware_auth");
 
 const authUser = require("./src/auth-user/controller_user");
 const consoles = require('./src/console/controller_console')
+const station = require('./src/station/controller_station')
 app.use("/auth", authUser);
+app.use('/station', station)
 app.use("/consoles", consoles);
 
 //app.get("/test", verifyToken, (req, res, next) => {
