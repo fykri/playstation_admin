@@ -13,3 +13,5 @@ pool.connect()
     .catch((err) => console.error("❌ DB connection error", err));
 
 module.exports = pool;
+
+//psql -U postgres -d nama_database -f db/migrations/001_remove_unique_station.sql

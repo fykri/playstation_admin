@@ -53,9 +53,8 @@ router.delete("/delete-data/:id", async (req, res, next) => {
 
 router.patch("/:id_console", async (req, res, next) => {
     try {
-        const data = req.body;
         const { id_console } = req.params;
-        await updateDataConsole(id_console, data);
+        await updateDataConsole(id_console, req.body);
         res.status(200).json({
             success: true,
             message: 'data berhasil di update'

@@ -1,0 +1,2 @@
+ALTER TABLE station
+DROP CONSTRAINT station_id_console_key;

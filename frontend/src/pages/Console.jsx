@@ -1,12 +1,12 @@
 import NavbarLayout from '@/layout/NavbarLayout';
-import { Box, Heading, Table, Button, HStack } from '@chakra-ui/react';
+import { Box, Table, Button, HStack } from '@chakra-ui/react';
 import DialogLayout from '@/layout/DialogLayout';
 import InputContainer from '@/components/input/InputContainer';
 import { getAllConsole, postConsole, deleteConsole, updateConsole } from '@/api/console';
 import { useEffect, useState } from 'react';
 import useEnterNavigation from '@/hooks/useEnterNavigation';
 import EmptyState from './../components/EmptyState';
-import { toaster, Toaster } from '@/components/ui/toaster';
+import { toaster } from '@/components/ui/toaster';
 import Paginations from '@/components/Paginations';
 import usePagination from '@/hooks/usePaginations';
 import { formatRupiah, filteringNumber } from '@/utils/formatNumber';
@@ -15,6 +15,7 @@ import EditDeleteButton from '@/components/button/EditDeleteButton';
 import EditSaveButton from '@/components/button/EditSaveButton';
 import InputEdit from '@/components/input/InputEdit';
 import filteringObject from '@/utils/filteringObjectUpdate';
+import { validateData } from '@/utils/validate';
 
 const data = [
     {
@@ -72,7 +73,7 @@ const Console = () => {
             const result = await getAllConsole();
             setDataConsole(result);
         } catch (error) {
-            console.log(error.message)
+            console.log(error.message);
         } finally {
             setLoading(false);
         }
@@ -100,6 +101,7 @@ const Console = () => {
     const handleSubmitAddConsole = async () => {
         setLoading(true);
         try {
+            validateData(dataField)
             await postConsole(dataField);
             setOpenDialog(false);
             toaster.create({
@@ -122,6 +124,7 @@ const Console = () => {
     const handleUpdate = async () => {
         setLoading(true);
         try {
+            validateData(formEdit)
             const oldItem = dataConsole.find(item => item.id_console === editId);
             const data = filteringObject(oldItem, formEdit);
             if (Object.keys(data).length === 0) {
@@ -172,7 +175,6 @@ const Console = () => {
     const { setRef, handleKeyDown } = useEnterNavigation(data.length, handleSubmitAddConsole, openDialog);
     return (
         <NavbarLayout header={'CONSOLE'}>
-            <Toaster />
             {/* DIALOG */}
             <DialogLayout
                 cancelTitle={'cancel'}
@@ -248,7 +250,6 @@ const Console = () => {
                             title="Data konsol kosong"
                         />
                     ) : (
-
                         // TABLE CONSOLE
                         <Box
                             display="flex"

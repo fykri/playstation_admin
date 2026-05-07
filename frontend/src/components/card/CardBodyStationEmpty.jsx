@@ -1,6 +1,6 @@
 import { VStack, Badge, HStack, NumberInput, IconButton, Text, Button } from '@chakra-ui/react';
 import { LuMinus, LuPlus } from 'react-icons/lu';
-const CardBodyStationEmpty = () => {
+const CardBodyStationEmpty = ({price}) => {
     return (
         <VStack
             flex={2}
@@ -11,7 +11,7 @@ const CardBodyStationEmpty = () => {
             boxShadow={'md'}
             rounded={'sm'}
         >
-            <Badge variant={'surface'}>Aksi coy</Badge>
+            <Badge variant={'surface'}>Action</Badge>
             <HStack w={'full'} mt={1} gap={6} justifyContent={'center'}>
                 <NumberInput.Root defaultValue="1" spinOnPress={false} unstyled min={1}>
                     <HStack gap={0}>
@@ -28,7 +28,7 @@ const CardBodyStationEmpty = () => {
                         </NumberInput.IncrementTrigger>
                     </HStack>
                 </NumberInput.Root>
-                <Text fontSize={'xs'}>RP. 20.000</Text>
+                <Text fontSize={'xs'}>{price}</Text>
             </HStack>
             <Button size={'xs'} rounded={'xs'} w={'full'} colorPalette={'green'}>
                 MULAI

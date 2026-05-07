@@ -1,7 +1,7 @@
 import { VStack, Badge, HStack, NumberInput, IconButton, Text, Button, Box, Icon } from '@chakra-ui/react';
 import { LuSquare, LuX, LuPause } from 'react-icons/lu';
 import { Tooltip } from './../ui/tooltip';
-const CardBodyStationUsed = () => {
+const CardBodyStationUsed = ({price}) => {
     return (
         <VStack
             flex={2}
@@ -27,7 +27,7 @@ const CardBodyStationUsed = () => {
                         3 jam
                     </Text>
                     <Text fontSize={'xs'} fontWeight={'bold'} transform="translateY(2px)">
-                        RP. 20.000
+                        {price}
                     </Text>
                 </Box>
             </HStack>

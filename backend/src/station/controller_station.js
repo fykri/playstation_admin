@@ -1,4 +1,4 @@
-const { selectAllStation } = require('./repository_station');
+const { selectAllStation, selectALlConsoleByQty, getConsolesWithAvailability } = require('./repository_station');
 const { addStation, updateDataStation, deleteDataStation } = require('./services_station');
 
 const router = require('express').Router();
@@ -52,9 +52,35 @@ router.delete('/:id_station', async (req, res, next) => {
             message: 'data berhasil dihapus',
         });
     } catch (error) {
-        console.log(error)
-        next(error)
+        console.log(error);
+        next(error);
     }
 });
 
+router.get('/getConsoleByQty', async (req, res, next) => {
+    try {
+        const result = await selectALlConsoleByQty();
+        res.status(200).json({
+            success: true,
+            message: 'data berhasil didapatkan',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/getConsolesWithAvailability/:id_console', async (req, res, next) => {
+    try {
+        const { id_console } = req.params;
+        const result = await getConsolesWithAvailability(id_console);
+        res.status(200).json({
+            success: true,
+            message: 'berhasil dapatkan data',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
 module.exports = router;
