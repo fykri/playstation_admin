@@ -25,7 +25,6 @@ export const postConsole = async data => {
         }
     }
 };
-
 export const deleteConsole = async id_console => {
     try {
         const result = await api.delete(`/consoles/delete-data/${id_console}`);

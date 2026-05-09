@@ -30,7 +30,7 @@ const CardBodyStationEmpty = ({price}) => {
                 </NumberInput.Root>
                 <Text fontSize={'xs'}>{price}</Text>
             </HStack>
-            <Button size={'xs'} rounded={'xs'} w={'full'} colorPalette={'green'}>
+            <Button size={'xs'} rounded={'xs'} w={'full'} colorPalette={'teal'}>
                 MULAI
             </Button>
         </VStack>

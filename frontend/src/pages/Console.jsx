@@ -101,7 +101,7 @@ const Console = () => {
     const handleSubmitAddConsole = async () => {
         setLoading(true);
         try {
-            validateData(dataField)
+            validateData(dataField);
             await postConsole(dataField);
             setOpenDialog(false);
             toaster.create({
@@ -124,7 +124,7 @@ const Console = () => {
     const handleUpdate = async () => {
         setLoading(true);
         try {
-            validateData(formEdit)
+            validateData(formEdit);
             const oldItem = dataConsole.find(item => item.id_console === editId);
             const data = filteringObject(oldItem, formEdit);
             if (Object.keys(data).length === 0) {
@@ -242,7 +242,9 @@ const Console = () => {
 
             {/* Content Console */}
             <Box mt={8}>
-                <Button onClick={() => setOpenDialog(true)}>Tambah Data </Button>
+                <Button onClick={() => setOpenDialog(true)} colorPalette={'cyan'} variant={'surface'}>
+                    Tambah Data{' '}
+                </Button>
                 <Box mt={3}>
                     {dataConsole.length === 0 ? (
                         <EmptyState

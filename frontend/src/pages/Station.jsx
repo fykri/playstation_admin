@@ -1,6 +1,5 @@
 import NavbarLayout from '@/layout/NavbarLayout';
-import CardStation from '@/components/card/CardStation';
-import { Text, Box, Button, Grid, HStack, createListCollection } from '@chakra-ui/react';
+import { Text, Box, Button, HStack, createListCollection } from '@chakra-ui/react';
 import { FiCheckCircle, FiClock } from 'react-icons/fi';
 import DialogLayout from '@/layout/DialogLayout';
 import { useEffect, useState } from 'react';
@@ -14,10 +13,10 @@ import {
     getConsolesWithAvailability,
     updateStation,
 } from '@/api/station';
-import { formatRupiah } from '@/utils/formatNumber';
 import { validateData } from '@/utils/validate';
 import AlertDialog from '@/components/dialog/AlertDialog';
 import SelectInput from '@/components/SelectInput';
+import TabsStation from '@/components/TabsStation';
 
 const Station = () => {
     const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -143,11 +142,6 @@ const Station = () => {
     useEffect(() => {
         fetchStation();
     }, []);
-    console.log({
-        id_console: selectedConsole[0],
-        name_station: nameConsole,
-        id_station: idStationEdit,
-    });
     useEffect(() => {
         if (openEditDialog === true) {
             fetchConsoleWithAvailability();
@@ -159,6 +153,19 @@ const Station = () => {
             fetchConsole();
         }
     }, [openAddDialog]);
+
+    const sortStation = items =>
+        [...items].sort((a, b) =>
+            a.name_station.localeCompare(b.name_station, undefined, {
+                numeric: true,
+                sensitivity: 'base',
+            }),
+        );
+
+    const availableStations = sortStation(stationItems.filter(item => item.status === 'available'));
+
+    const occupiedStations = sortStation(stationItems.filter(item => item.status === 'occupied'));
+
     return (
         <NavbarLayout header={'STATION'}>
             {/* FORM TAMBAH DATA */}
@@ -251,41 +258,30 @@ const Station = () => {
             </AlertDialog>
             {/* END ALERT DELETE DATA */}
             {/* Card  Station*/}
-            <Button mt={8} onClick={() => setOpenAddDialog(true)}>
+
+            <Button mt={8} onClick={() => setOpenAddDialog(true)} colorPalette={'cyan'} variant={'surface'}>
                 Tambah Meja
             </Button>
+
             <Box>
-                <HStack alignItems={'center'} mt={5} color={'green.200'}>
-                    <FiCheckCircle />
-                    <Text fontSize="md" fontWeight="bold">
-                        Kosong (5)
-                    </Text>
-                </HStack>
-                <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={7} mt={4} mb={6}>
-                    {stationItems.map((val, index) => (
-                        <CardStation
-                            onClickDelete={() => {
-                                setAlertDelete(true);
-                                setDeleteField({
-                                    id_station: val.id_station,
-                                    name_console: val.console_type,
-                                    name_station: val.name_station,
-                                });
-                            }}
-                            key={index}
-                            onClickEdit={() => {
-                                setIdStationEdit(val.id_station);
-                                setSelectedConsole([String(val.id_console)]);
-                                setNameConsole(val.name_station);
-                                setOpenEditDialog(true);
-                            }}
-                            nameConsole={val.console_type?.toUpperCase()}
-                            namePackage={val.package?.toUpperCase()}
-                            nameStation={val.name_station?.toUpperCase()}
-                            price={`Rp. ${formatRupiah(val.hourly_price)}`}
-                        ></CardStation>
-                    ))}
-                </Grid>
+                <TitleStatusStation status={'kosong'} lengthStatus={availableStations.length} />
+                <TabsStation
+                    statusStation={availableStations}
+                    onEdit={val => {
+                        setIdStationEdit(val.id_station);
+                        setSelectedConsole([String(val.id_console)]);
+                        setNameConsole(val.name_station);
+                        setOpenEditDialog(true);
+                    }}
+                    onDelete={val => {
+                        setAlertDelete(true);
+                        setDeleteField({
+                            id_station: val.id_station,
+                            name_console: val.console_type,
+                            name_station: val.name_station,
+                        });
+                    }}
+                />
             </Box>
 
             <HStack alignItems={'center'} mt={5} color={'red.200'}>
@@ -296,6 +292,17 @@ const Station = () => {
             </HStack>
             {/* End Card */}
         </NavbarLayout>
+    );
+};
+
+const TitleStatusStation = ({ status, lengthStatus }) => {
+    return (
+        <HStack alignItems={'center'} mt={5} color={'green.200'}>
+            <FiCheckCircle />
+            <Text fontSize="md" fontWeight="bold">
+                {`${status} (${lengthStatus})`}
+            </Text>
+        </HStack>
     );
 };
 
