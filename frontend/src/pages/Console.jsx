@@ -1,5 +1,5 @@
 import NavbarLayout from '@/layout/NavbarLayout';
-import { Box, Table, Button, HStack } from '@chakra-ui/react';
+import { Box, Table, Button, HStack, createListCollection, Select } from '@chakra-ui/react';
 import DialogLayout from '@/layout/DialogLayout';
 import InputContainer from '@/components/input/InputContainer';
 import { getAllConsole, postConsole, deleteConsole, updateConsole } from '@/api/console';
@@ -16,31 +16,32 @@ import EditSaveButton from '@/components/button/EditSaveButton';
 import InputEdit from '@/components/input/InputEdit';
 import filteringObject from '@/utils/filteringObjectUpdate';
 import { validateData } from '@/utils/validate';
+import SelectContainer from '@/components/select/SelectContainer';
 
 const data = [
     {
         name: 'console_type',
         label: 'Tipe konsol',
         placeholder: 'misal: nitendo switch',
-        type: true,
+        type: 'text',
     },
     {
         name: 'package',
         label: 'Paket',
         placeholder: 'misal: vip atau reguler',
-        type: true,
+        type: 'select',
     },
     {
         name: 'quantity',
         label: 'Kuantitas',
         placeholder: 'misal: 1, 2 atau 5',
-        type: true,
+        type: 'text',
     },
     {
         name: 'hourly_price',
         label: 'Harga perjam',
         placeholder: '20.000',
-        type: false,
+        type: 'text',
     },
 ];
 
@@ -96,6 +97,15 @@ const Console = () => {
         setEditId(id);
         setFormEdit(data);
     };
+
+    const consolesListSelect = createListCollection({
+        items: [
+            { label: 'VIP', value: 'VIP' },
+            { label: 'Reguler', value: 'Reguler' },
+        ],
+        itemToString: e => e.label,
+        itemToValue: item => item.value,
+    });
 
     // handle API POST console
     const handleSubmitAddConsole = async () => {
@@ -171,6 +181,8 @@ const Console = () => {
         }
     };
 
+    console.log(dataField)
+
     // Buat Dialog: ketika field di enter maka akan lanjut ke field berikutnya
     const { setRef, handleKeyDown } = useEnterNavigation(data.length, handleSubmitAddConsole, openDialog);
     return (
@@ -189,33 +201,58 @@ const Console = () => {
                 }}
                 loading={loading}
             >
-                {data.map((value, index) => (
-                    <InputContainer
-                        key={index}
-                        value={
-                            value.name === 'hourly_price' ? formatRupiah(dataField.hourly_price) : dataField[value.name]
-                        }
-                        label={value.label}
-                        placeholder={value.placeholder}
-                        isRp={value.type}
-                        onChange={e => {
-                            if (value.name === 'hourly_price' || value.name === 'quantity') {
-                                const raw = filteringNumber(e.target.value);
-                                setDataField(prev => ({
-                                    ...prev,
-                                    [value.name]: raw,
-                                }));
-                            } else {
-                                setDataField(prev => ({
-                                    ...prev,
-                                    [value.name]: e.target.value,
-                                }));
+                {data.map((value, index) =>
+                    value.type == 'select' ? (
+                        <SelectContainer
+                            key={index}
+                            collection={consolesListSelect}
+                            label={'paket'}
+                            placeholder={'pilih paket'}
+                            value={dataField.package}
+                            onValueChange={items => {
+                                setDataField({
+                                    ...dataField,
+                                    package: items.value[0],
+                                });
+                            }}
+                        >
+                            {consolesListSelect.items.map(items => (
+                                <Select.Item item={items} key={items.value}>
+                                    {items.value}
+                                </Select.Item>
+                            ))}
+                        </SelectContainer>
+                    ) : (
+                        <InputContainer
+                            key={index}
+                            value={
+                                value.name === 'hourly_price'
+                                    ? formatRupiah(dataField.hourly_price)
+                                    : dataField[value.name]
                             }
-                        }}
-                        ref={setRef(index)}
-                        onKeyDown={handleKeyDown(index)}
-                    />
-                ))}
+                            type={value.type}
+                            label={value.label}
+                            placeholder={value.placeholder}
+                            isRp={value.name === 'hourly_price'}
+                            onChange={e => {
+                                if (value.name === 'hourly_price' || value.name === 'quantity') {
+                                    const raw = filteringNumber(e.target.value);
+                                    setDataField(prev => ({
+                                        ...prev,
+                                        [value.name]: raw,
+                                    }));
+                                } else {
+                                    setDataField(prev => ({
+                                        ...prev,
+                                        [value.name]: e.target.value,
+                                    }));
+                                }
+                            }}
+                            ref={setRef(index)}
+                            onKeyDown={handleKeyDown(index)}
+                        />
+                    ),
+                )}
             </DialogLayout>
             {/* Dialog delete data */}
             <AlertDialog

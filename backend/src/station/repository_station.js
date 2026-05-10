@@ -30,7 +30,7 @@ const updateStation = async (id_station, data) => {
             id_station,
         ]);
     } catch (error) {
-        throw error
+        throw error;
     }
 };
 
@@ -56,7 +56,7 @@ const selectALlConsoleByQty = async (id_console = []) => {
     ) s ON c.id_console = s.id_console
     ORDER BY
       (GREATEST(c.quantity - COALESCE(s.used_count, 0), 0) = 0) ASC,
-      c.created_at ASC
+      c.created_at DESC
   `);
 
     return rows;

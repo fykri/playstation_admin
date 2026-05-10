@@ -1,21 +1,11 @@
 import { Field, Input, InputGroup } from '@chakra-ui/react';
 import { forwardRef } from 'react';
 const InputContainer = forwardRef(
-    ({ label, placeholder, isRp = true, onKeyDown, onChange, value, type = 'text' }, ref) => {
+    ({ label, placeholder, isRp = false, onKeyDown, onChange, value, type = 'text' }, ref) => {
         return (
             <Field.Root>
                 <Field.Label>{label}</Field.Label>
-                {isRp ? (
-                    <Input
-                        value={value}
-                        placeholder={placeholder}
-                        type={type}
-                        size={'sm'}
-                        ref={ref}
-                        onChange={onChange}
-                        onKeyDown={onKeyDown}
-                    ></Input>
-                ) : (
+                {type == 'text' && isRp ? (
                     <InputGroup
                         startElement="Rp."
                         startElementProps={{
@@ -33,6 +23,16 @@ const InputContainer = forwardRef(
                             size={'sm'}
                         ></Input>
                     </InputGroup>
+                ) : (
+                    <Input
+                        value={value}
+                        placeholder={placeholder}
+                        type={type}
+                        size={'sm'}
+                        ref={ref}
+                        onChange={onChange}
+                        onKeyDown={onKeyDown}
+                    ></Input>
                 )}
             </Field.Root>
         );

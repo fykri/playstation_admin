@@ -15,7 +15,7 @@ import {
 } from '@/api/station';
 import { validateData } from '@/utils/validate';
 import AlertDialog from '@/components/dialog/AlertDialog';
-import SelectInput from '@/components/SelectInput';
+import SelectInputConsole from '@/components/select/SelectInputConsole';
 import TabsStation from '@/components/TabsStation';
 
 const Station = () => {
@@ -186,7 +186,7 @@ const Station = () => {
                     setOpenAddDialog(val.open);
                 }}
             >
-                <SelectInput
+                <SelectInputConsole
                     collection={consoles}
                     data={consoles}
                     value={selectedConsole}
@@ -220,7 +220,7 @@ const Station = () => {
                     setOpenEditDialog(val.open);
                 }}
             >
-                <SelectInput
+                <SelectInputConsole
                     collection={consoles}
                     data={consoles}
                     value={selectedConsole}
