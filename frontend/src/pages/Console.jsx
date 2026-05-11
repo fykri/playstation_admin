@@ -181,7 +181,7 @@ const Console = () => {
         }
     };
 
-    console.log(dataField)
+    console.log(formEdit);
 
     // Buat Dialog: ketika field di enter maka akan lanjut ke field berikutnya
     const { setRef, handleKeyDown } = useEnterNavigation(data.length, handleSubmitAddConsole, openDialog);
@@ -208,7 +208,7 @@ const Console = () => {
                             collection={consolesListSelect}
                             label={'paket'}
                             placeholder={'pilih paket'}
-                            value={dataField.package}
+                            value={dataField?.package ? [dataField.package] : []}
                             onValueChange={items => {
                                 setDataField({
                                     ...dataField,
@@ -313,22 +313,42 @@ const Console = () => {
                                             <Table.Row bg={'none'} _hover={{ bg: 'gray.700' }} key={val.id_console}>
                                                 {['console_type', 'package', 'quantity'].map((v, index) => (
                                                     <Table.Cell key={index}>
-                                                        <InputEdit
-                                                            id_console={val.id_console}
-                                                            valueEdit={formEdit[v]}
-                                                            data={val[v]}
-                                                            id_edit={editId}
-                                                            placeholder={data[index].placeholder}
-                                                            onKeyDown={e => {
-                                                                if (e.key === 'Enter') handleUpdate();
-                                                            }}
-                                                            onChange={e => {
-                                                                setFormEdit(value => ({
-                                                                    ...value,
-                                                                    [v]: e.target.value,
-                                                                }));
-                                                            }}
-                                                        />
+                                                        {v === 'package' && editId === val.id_console ? (
+                                                            <SelectContainer
+                                                                collection={consolesListSelect}
+                                                                onValueChange={items => {
+                                                                    setFormEdit({
+                                                                        ...formEdit,
+                                                                        [v]: items.value[0],
+                                                                    });
+                                                                }}
+                                                                placeholder={'pilih console'}
+                                                                value={formEdit?.package ? [formEdit.package] : []}
+                                                            >
+                                                                {consolesListSelect.items.map(items => (
+                                                                    <Select.Item item={items} key={items.value}>
+                                                                        {items.value}
+                                                                    </Select.Item>
+                                                                ))}
+                                                            </SelectContainer>
+                                                        ) : (
+                                                            <InputEdit
+                                                                id_console={val.id_console}
+                                                                valueEdit={formEdit[v]}
+                                                                data={val[v]}
+                                                                id_edit={editId}
+                                                                placeholder={data[index].placeholder}
+                                                                onKeyDown={e => {
+                                                                    if (e.key === 'Enter') handleUpdate();
+                                                                }}
+                                                                onChange={e => {
+                                                                    setFormEdit(value => ({
+                                                                        ...value,
+                                                                        [v]: e.target.value,
+                                                                    }));
+                                                                }}
+                                                            />
+                                                        )}
                                                     </Table.Cell>
                                                 ))}
                                                 <Table.Cell>

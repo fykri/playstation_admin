@@ -4,7 +4,7 @@ const SelectContainer = ({ collection, label, children, value, placeholder, onVa
     return (
         <Select.Root collection={collection} size="sm" value={value} onValueChange={onValueChange}>
             <Select.HiddenSelect />
-            <Select.Label>{label}</Select.Label>
+            {label && <Select.Label>{label}</Select.Label>}
             <Select.Control>
                 <Select.Trigger>
                     <Select.ValueText placeholder={placeholder} />
