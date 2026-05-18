@@ -12,6 +12,8 @@ const CardStation = ({
     price,
     onClickDelete,
     onClickEdit,
+    valueBilling,
+    onChangeBilling,
 }) => {
     return (
         <VStack w={'52'} h={'60'} rounded={'sm'} bg={'var(--color-container)'} boxShadow={'md'} position={'relative'}>
@@ -52,7 +54,11 @@ const CardStation = ({
             />
             {/* EndHeader */}
             {/* Body */}
-            {status === 'kosong' ? <CardBodyStationEmpty price={price} /> : <CardBodyStationUsed price={price} />}
+            {status === 'kosong' ? (
+                <CardBodyStationEmpty price={price} defaultValue={valueBilling} onChange={onChangeBilling} />
+            ) : (
+                <CardBodyStationUsed price={price} />
+            )}
             {/* End Body */}
         </VStack>
     );

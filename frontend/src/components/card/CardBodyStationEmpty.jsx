@@ -1,6 +1,6 @@
 import { VStack, Badge, HStack, NumberInput, IconButton, Text, Button } from '@chakra-ui/react';
 import { LuMinus, LuPlus } from 'react-icons/lu';
-const CardBodyStationEmpty = ({price}) => {
+const CardBodyStationEmpty = ({ price, defaultValue, onChange }) => {
     return (
         <VStack
             flex={2}
@@ -13,7 +13,7 @@ const CardBodyStationEmpty = ({price}) => {
         >
             <Badge variant={'surface'}>Action</Badge>
             <HStack w={'full'} mt={1} gap={6} justifyContent={'center'}>
-                <NumberInput.Root defaultValue="1" spinOnPress={false} unstyled min={1}>
+                <NumberInput.Root defaultValue={1} spinOnPress={false} unstyled min={1} onValueChange={onChange}>
                     <HStack gap={0}>
                         <NumberInput.DecrementTrigger asChild>
                             <IconButton variant="outline" size="xs">

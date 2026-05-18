@@ -17,6 +17,8 @@ import { validateData } from '@/utils/validate';
 import AlertDialog from '@/components/dialog/AlertDialog';
 import SelectInputConsole from '@/components/select/SelectInputConsole';
 import TabsStation from '@/components/TabsStation';
+import { useBillingStore } from '@/stores/useStationStore';
+import { useShallow } from 'zustand/shallow';
 
 const Station = () => {
     const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -30,7 +32,13 @@ const Station = () => {
     const [loading, setLoading] = useState(false);
     const [selectedConsole, setSelectedConsole] = useState([]);
     const [nameConsole, setNameConsole] = useState('');
-    const [stationItems, setStationItems] = useState([]);
+    const { stationItems, setStation } = useBillingStore(
+        useShallow(state => ({
+            stationItems: state.stationItems,
+            setStation: state.setStation,
+        })),
+    );
+    //const [stationItems, setStationItems] = useState([]);
     const [deleteField, setDeleteField] = useState({
         id_station: '',
         name_station: '',
@@ -85,12 +93,17 @@ const Station = () => {
             setLoading(false);
         }
     };
-
     const fetchStation = async () => {
         setLoading(true);
         try {
             const result = await getAllStation();
-            setStationItems(result);
+            setStation(
+                result.map(val => ({
+                    ...val,
+                    billing: 1,
+                    new_price: val.hourly_price
+                })),
+            );
         } catch (error) {
             console.log(error.message);
         } finally {
@@ -138,6 +151,8 @@ const Station = () => {
             setLoading(false);
         }
     };
+    
+    console.log(stationItems)
 
     useEffect(() => {
         fetchStation();
