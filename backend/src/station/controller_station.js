@@ -1,5 +1,5 @@
 const { selectAllStation, selectALlConsoleByQty, getConsolesWithAvailability } = require('./repository_station');
-const { addStation, updateDataStation, deleteDataStation } = require('./services_station');
+const { addStation, updateDataStation, deleteDataStation, startStation } = require('./services_station');
 
 const router = require('express').Router();
 
@@ -78,6 +78,20 @@ router.get('/getConsolesWithAvailability/:id_console', async (req, res, next) =>
             success: true,
             message: 'berhasil dapatkan data',
             data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/start-billing/:id_station', async (req, res, next) => {
+    try {
+        const { id_station } = req.params;
+        const { time } = req.body;
+        await startStation(id_station, time);
+        res.status(201).json({
+            success: true,
+            message: 'berhasil upsert station & session',
         });
     } catch (error) {
         next(error);

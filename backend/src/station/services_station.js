@@ -1,6 +1,6 @@
 const throwStatus = require('../utils/throwStatus');
 const { validateNotEmpty, isUUID } = require('../utils/validateInput');
-const { insertStation, updateStation, deleteStation } = require('./repository_station');
+const { insertStation, updateStation, deleteStation, upsertStation } = require('./repository_station');
 
 const addStation = async (id_console, name_station) => {
     try {
@@ -19,22 +19,31 @@ const updateDataStation = async (id_station, data) => {
         isUUID(id_station);
         return await updateStation(id_station, data);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         throw error;
     }
 };
 
-const deleteDataStation = async (id_station)=> {
+const deleteDataStation = async id_station => {
     try {
-        isUUID(id_station)
-        const result = await deleteStation(id_station)
-        if(result.rowCount === 0) {
-            throwStatus('id not found', 404)
+        isUUID(id_station);
+        const result = await deleteStation(id_station);
+        if (result.rowCount === 0) {
+            throwStatus('id not found', 404);
         }
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
 
+const startStation = async (id_station, time) => {
+    try {
+        validateNotEmpty({ id_station, time });
+        isUUID(id_station);
+        upsertStation(id_station, time);
+    } catch (error) {
+        throw error;
+    }
+};
 
-module.exports = { addStation, updateDataStation, deleteDataStation };
+module.exports = { addStation, updateDataStation, deleteDataStation, startStation };

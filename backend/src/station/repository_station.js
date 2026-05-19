@@ -19,7 +19,9 @@ const insertStation = async (id_console, name_station) => {
 };
 
 const selectAllStation = async () => {
-    return await pool.query('SELECT * FROM station s JOIN console c ON s.id_console = c.id_console');
+    return await pool.query(
+        'SELECT s.id_station, s.id_console, s.name_station, s.status, c.console_type, c.package, c.hourly_price FROM station s JOIN console c ON s.id_console = c.id_console',
+    );
 };
 
 const updateStation = async (id_station, data) => {
@@ -101,6 +103,35 @@ const getConsolesWithAvailability = async (id_console = null) => {
     return rows;
 };
 
+const upsertStation = async (id_station, time) => {
+    const client = await pool.connect();
+    try {
+        const intervalString = `${time} hour`;
+        await client.query('BEGIN');
+        await client.query('UPDATE station SET status=$1 WHERE id_station=$2', ['used', id_station]);
+
+        const priceQuery = await client.query(
+            'SELECT c.hourly_price from station s JOIN console c ON s.id_console = c.id_console WHERE s.id_station = $1',
+            [id_station],
+        );
+
+        if (priceQuery.rowCount === 0) throwStatus('station atau console tidak ditemukan', 404);
+
+        const total_price = priceQuery.rows[0].hourly_price * Number(time);
+
+        await client.query(
+            'INSERT INTO session (id_station, start_time, end_time, total_price) VALUES ($1, NOW(), NOW() + $2::INTERVAL ,$3)',
+            [id_station, intervalString, total_price],
+        );
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     insertStation,
     selectAllStation,
@@ -108,4 +139,5 @@ module.exports = {
     deleteStation,
     selectALlConsoleByQty,
     getConsolesWithAvailability,
+    upsertStation,
 };
