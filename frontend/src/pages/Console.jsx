@@ -5,7 +5,7 @@ import InputContainer from '@/components/input/InputContainer';
 import { getAllConsole, postConsole, deleteConsole, updateConsole } from '@/api/console';
 import { useEffect, useState } from 'react';
 import useEnterNavigation from '@/hooks/useEnterNavigation';
-import EmptyState from './../components/EmptyState';
+import EmptyState from '../components/EmptyState';
 import { toaster } from '@/components/ui/toaster';
 import Paginations from '@/components/Paginations';
 import usePagination from '@/hooks/usePaginations';
@@ -181,7 +181,6 @@ const Console = () => {
         }
     };
 
-    console.log(formEdit);
 
     // Buat Dialog: ketika field di enter maka akan lanjut ke field berikutnya
     const { setRef, handleKeyDown } = useEnterNavigation(data.length, handleSubmitAddConsole, openDialog);
@@ -315,6 +314,7 @@ const Console = () => {
                                                     <Table.Cell key={index}>
                                                         {v === 'package' && editId === val.id_console ? (
                                                             <SelectContainer
+                                                            classname={'border! border-blue-500! rounded-sm'}
                                                                 collection={consolesListSelect}
                                                                 onValueChange={items => {
                                                                     setFormEdit({

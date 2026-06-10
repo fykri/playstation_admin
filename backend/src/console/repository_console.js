@@ -1,5 +1,6 @@
 const pool = require('../../database/db');
 const { filterDataField } = require('../utils/filteringData');
+const throwStatus = require('../utils/throwStatus');
 
 const insertConsole = async (console_type, quantity, package, hourly_price) => {
     const result = await pool.query(
@@ -15,11 +16,26 @@ const selectConsole = async () => {
 };
 
 const deleteData = async id_console => {
-    return await pool.query('DELETE FROM console WHERE id_console = $1', [id_console]);
+    try {
+        return await pool.query('DELETE FROM console WHERE id_console = $1', [id_console]);
+    } catch (error) {
+        console.log('error: ', error)
+        if (error.code === '23503' || error.code === '23001') {
+            throwStatus(
+                'console masih digunakan di station, harap hapus console yang ada di station terlebih dahulu',
+                400,
+            );
+        }
+    }
 };
 
 const updateConsole = async (id_console, data) => {
     try {
+        const qty = await pool.query('select count (*) as count FROM station where id_console=$1', [id_console]);
+        const { quantity } = data;
+        if(Number(qty.rows[0].count) > quantity) {
+            throwStatus('kuantitas tidak bisa di update, console masih digunakan oleh station', 400)
+        }
         const { keys, values, setQuery } = filterDataField(data, [
             'console_type',
             'quantity',

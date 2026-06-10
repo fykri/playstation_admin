@@ -1,0 +1,1 @@
+ALTER TABLE session ADD remaining_time INT DEFAULT 0;

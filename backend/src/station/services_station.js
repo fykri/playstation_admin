@@ -19,7 +19,6 @@ const updateDataStation = async (id_station, data) => {
         isUUID(id_station);
         return await updateStation(id_station, data);
     } catch (error) {
-        console.log(error);
         throw error;
     }
 };

@@ -1,6 +1,5 @@
 import api from './axios';
-import { updateConsole } from '@/api/console';
-export const getAllConsoleByQty = async (selectedConsole = []) => {
+export const getAllConsoleByQty = async () => {
     try {
         const { data } = await api.get('/station/getConsoleByQty');
         return data.data;
@@ -68,7 +67,7 @@ export const getConsolesWithAvailability = async id_station => {
 export const updateStation = async (id_station, data) => {
     try {
         const result = await api.patch(`/station/${id_station}`, data);
-        return result
+        return result;
     } catch (error) {
         if (error.response && error.response.data) {
             throw error.response.data || 'Terjadi kesalahan';
@@ -77,3 +76,17 @@ export const updateStation = async (id_station, data) => {
         }
     }
 };
+
+export const startbilling = async (id_station, time) => {
+    try {
+        const result = await api.post(`/station/start-billing/${id_station}`, { time });
+        return result.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};
+

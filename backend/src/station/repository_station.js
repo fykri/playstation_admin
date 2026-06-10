@@ -20,7 +20,7 @@ const insertStation = async (id_console, name_station) => {
 
 const selectAllStation = async () => {
     return await pool.query(
-        'SELECT s.id_station, s.id_console, s.name_station, s.status, c.console_type, c.package, c.hourly_price FROM station s JOIN console c ON s.id_console = c.id_console',
+        'SELECT s.id_station, s.id_console, s.name_station, s.status, s.billing ,c.console_type, c.package, c.hourly_price FROM station s JOIN console c ON s.id_console = c.id_console',
     );
 };
 
@@ -108,7 +108,7 @@ const upsertStation = async (id_station, time) => {
     try {
         const intervalString = `${time} hour`;
         await client.query('BEGIN');
-        await client.query('UPDATE station SET status=$1 WHERE id_station=$2', ['used', id_station]);
+        await client.query('UPDATE station SET status=$1, billing=$2 WHERE id_station=$3', ['used', time, id_station]);
 
         const priceQuery = await client.query(
             'SELECT c.hourly_price from station s JOIN console c ON s.id_console = c.id_console WHERE s.id_station = $1',
@@ -120,8 +120,8 @@ const upsertStation = async (id_station, time) => {
         const total_price = priceQuery.rows[0].hourly_price * Number(time);
 
         await client.query(
-            'INSERT INTO session (id_station, start_time, end_time, total_price) VALUES ($1, NOW(), NOW() + $2::INTERVAL ,$3)',
-            [id_station, intervalString, total_price],
+            'INSERT INTO session (id_station, start_time, end_time, total_price, total_billing) VALUES ($1, NOW(), NOW() + $2::INTERVAL ,$3, $4)',
+            [id_station, intervalString, total_price, time],
         );
         await client.query('COMMIT');
     } catch (error) {

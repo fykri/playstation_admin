@@ -1,0 +1,1 @@
+alter table station add billing INT default 1;

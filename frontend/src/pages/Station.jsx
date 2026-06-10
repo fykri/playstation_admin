@@ -1,13 +1,12 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { Text, Box, Button, HStack, createListCollection } from '@chakra-ui/react';
-import { FiCheckCircle, FiClock } from 'react-icons/fi';
+import { LuGamepad2, LuMonitorPlay } from "react-icons/lu";
 import DialogLayout from '@/layout/DialogLayout';
 import { useEffect, useState } from 'react';
 import { toaster } from '@/components/ui/toaster';
 import InputContainer from '@/components/input/InputContainer';
 import {
     getAllConsoleByQty,
-    getAllStation,
     postDataStation,
     deleteDataStation,
     getConsolesWithAvailability,
@@ -19,6 +18,7 @@ import SelectInputConsole from '@/components/select/SelectInputConsole';
 import TabsStation from '@/components/TabsStation';
 import { useBillingStore } from '@/stores/useStationStore';
 import { useShallow } from 'zustand/shallow';
+import EmptyStatus from '@/components/EmptyStatus';
 
 const Station = () => {
     const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -32,10 +32,10 @@ const Station = () => {
     const [loading, setLoading] = useState(false);
     const [selectedConsole, setSelectedConsole] = useState([]);
     const [nameConsole, setNameConsole] = useState('');
-    const { stationItems, setStation } = useBillingStore(
+    const { stationItems, fetchStation } = useBillingStore(
         useShallow(state => ({
             stationItems: state.stationItems,
-            setStation: state.setStation,
+            fetchStation: state.fetchStation,
         })),
     );
     //const [stationItems, setStationItems] = useState([]);
@@ -93,23 +93,6 @@ const Station = () => {
             setLoading(false);
         }
     };
-    const fetchStation = async () => {
-        setLoading(true);
-        try {
-            const result = await getAllStation();
-            setStation(
-                result.map(val => ({
-                    ...val,
-                    billing: 1,
-                    new_price: val.hourly_price
-                })),
-            );
-        } catch (error) {
-            console.log(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const deleteStation = async () => {
         setLoading(true);
@@ -142,7 +125,6 @@ const Station = () => {
             setOpenEditDialog(false);
             setIdStationEdit('');
         } catch (error) {
-            console.log(error);
             toaster.create({
                 title: 'console dan nama station harus ada',
                 type: 'error',
@@ -151,12 +133,11 @@ const Station = () => {
             setLoading(false);
         }
     };
-    
-    console.log(stationItems)
 
     useEffect(() => {
         fetchStation();
     }, []);
+
     useEffect(() => {
         if (openEditDialog === true) {
             fetchConsoleWithAvailability();
@@ -177,9 +158,10 @@ const Station = () => {
             }),
         );
 
+    console.log('station items: ', stationItems);
     const availableStations = sortStation(stationItems.filter(item => item.status === 'available'));
 
-    const occupiedStations = sortStation(stationItems.filter(item => item.status === 'occupied'));
+    const occupiedStations = sortStation(stationItems.filter(item => item.status === 'used'));
 
     return (
         <NavbarLayout header={'STATION'}>
@@ -279,41 +261,72 @@ const Station = () => {
             </Button>
 
             <Box>
-                <TitleStatusStation status={'kosong'} lengthStatus={availableStations.length} />
-                <TabsStation
-                    statusStation={availableStations}
-                    onEdit={val => {
-                        setIdStationEdit(val.id_station);
-                        setSelectedConsole([String(val.id_console)]);
-                        setNameConsole(val.name_station);
-                        setOpenEditDialog(true);
-                    }}
-                    onDelete={val => {
-                        setAlertDelete(true);
-                        setDeleteField({
-                            id_station: val.id_station,
-                            name_console: val.console_type,
-                            name_station: val.name_station,
-                        });
-                    }}
-                />
+                <TitleStatusStation status={'kosong'} lengthStatus={availableStations.length} colorFont={'green.400'}>
+                    <LuGamepad2/>
+                </TitleStatusStation>
+                {availableStations.length > 0 ? (
+                    <TabsStation
+                        statusStation={availableStations}
+                        onEdit={val => {
+                            setIdStationEdit(val.id_station);
+                            setSelectedConsole([String(val.id_console)]);
+                            setNameConsole(val.name_station);
+                            setOpenEditDialog(true);
+                        }}
+                        onDelete={val => {
+                            setAlertDelete(true);
+                            setDeleteField({
+                                id_station: val.id_station,
+                                name_console: val.console_type,
+                                name_station: val.name_station,
+                            });
+                        }}
+                    />
+                ) : (
+                    <EmptyStatus
+                        title="Tidak ada station kosong"
+                        description="Belum ada station tersedia. Tambahkan station baru atau tunggu hingga station yang sedang digunakan selesai."
+                    />
+                )}
             </Box>
-
-            <HStack alignItems={'center'} mt={5} color={'red.200'}>
-                <FiClock />
-                <Text fontSize="md" fontWeight="bold">
-                    Dipakai (5)
-                </Text>
-            </HStack>
+            <Box>
+                <TitleStatusStation status={'Digunakan'} lengthStatus={occupiedStations.length} colorFont={'red.400'}>
+                    <LuMonitorPlay />
+                </TitleStatusStation>
+                {occupiedStations.length > 0 ? (
+                    <TabsStation
+                        statusStation={occupiedStations}
+                        onEdit={val => {
+                            setIdStationEdit(val.id_station);
+                            setSelectedConsole([String(val.id_console)]);
+                            setNameConsole(val.name_station);
+                            setOpenEditDialog(true);
+                        }}
+                        onDelete={val => {
+                            setAlertDelete(true);
+                            setDeleteField({
+                                id_station: val.id_station,
+                                name_console: val.console_type,
+                                name_station: val.name_station,
+                            });
+                        }}
+                    />
+                ) : (
+                    <EmptyStatus
+                        title="Tidak ada station yang digunakan"
+                        description="Belum ada pelanggan yang sedang bermain."
+                    />
+                )}
+            </Box>
             {/* End Card */}
         </NavbarLayout>
     );
 };
 
-const TitleStatusStation = ({ status, lengthStatus }) => {
+const TitleStatusStation = ({ status, lengthStatus, children, colorFont }) => {
     return (
-        <HStack alignItems={'center'} mt={5} color={'green.200'}>
-            <FiCheckCircle />
+        <HStack alignItems={'center'} mt={5} color={colorFont}>
+            {children}
             <Text fontSize="md" fontWeight="bold">
                 {`${status} (${lengthStatus})`}
             </Text>

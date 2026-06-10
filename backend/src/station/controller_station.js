@@ -52,7 +52,6 @@ router.delete('/:id_station', async (req, res, next) => {
             message: 'data berhasil dihapus',
         });
     } catch (error) {
-        console.log(error);
         next(error);
     }
 });

@@ -19,6 +19,7 @@ import {
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
+import { FaPlaystation } from "react-icons/fa";
 
 const BarMenu = [
     { name: "Dashboard", icon: MdDashboard },
@@ -39,7 +40,7 @@ const SideBar = () => {
             <HStack mt={8} pr={5} pl={4} mb={4} >
                 <Box flex={2} display="flex" gap={4} h="62px">
                     <Avatar.Root display="flex" alignSelf={"center"} size="xl">
-                        <Avatar.Fallback name="PS Admin"></Avatar.Fallback>
+                        <FaPlaystation/>
                     </Avatar.Root>
                     {isOpen && (
                         <Flex direction="column" gap={1}>

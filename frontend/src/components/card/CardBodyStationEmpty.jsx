@@ -1,6 +1,8 @@
-import { VStack, Badge, HStack, NumberInput, IconButton, Text, Button } from '@chakra-ui/react';
-import { LuMinus, LuPlus } from 'react-icons/lu';
-const CardBodyStationEmpty = ({ price, defaultValue, onChange }) => {
+import { VStack, Badge, HStack, Text, Button } from '@chakra-ui/react';
+import { useBillingStore } from '@/stores/useStationStore';
+import BillingControl from '../BillingControl';
+const CardBodyStationEmpty = ({ price, onChange, onClickStart, billing }) => {
+    const loading = useBillingStore(state => state.loadingStoreStation);
     return (
         <VStack
             flex={2}
@@ -13,24 +15,19 @@ const CardBodyStationEmpty = ({ price, defaultValue, onChange }) => {
         >
             <Badge variant={'surface'}>Action</Badge>
             <HStack w={'full'} mt={1} gap={6} justifyContent={'center'}>
-                <NumberInput.Root defaultValue={1} spinOnPress={false} unstyled min={1} onValueChange={onChange}>
-                    <HStack gap={0}>
-                        <NumberInput.DecrementTrigger asChild>
-                            <IconButton variant="outline" size="xs">
-                                <LuMinus />
-                            </IconButton>
-                        </NumberInput.DecrementTrigger>
-                        <NumberInput.ValueText textAlign="center" fontSize="sm" minW="4ch" />
-                        <NumberInput.IncrementTrigger asChild>
-                            <IconButton variant="outline" size="xs">
-                                <LuPlus />
-                            </IconButton>
-                        </NumberInput.IncrementTrigger>
-                    </HStack>
-                </NumberInput.Root>
+                <BillingControl billing={billing} onChange={onChange} />
                 <Text fontSize={'xs'}>{price}</Text>
             </HStack>
-            <Button size={'xs'} rounded={'xs'} w={'full'} colorPalette={'teal'}>
+            <Button
+                size={'xs'}
+                rounded={'xs'}
+                w={'full'}
+                colorPalette={'teal'}
+                loading={loading}
+                loadingText="Loading"
+                spinnerPlacement="start"
+                onClick={onClickStart}
+            >
                 MULAI
             </Button>
         </VStack>

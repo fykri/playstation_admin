@@ -4,19 +4,37 @@ import CardBodyStationEmpty from './CardBodyStationEmpty';
 import CardBodyStationUsed from './CardBodyStationUsed';
 import { IconButton } from '@chakra-ui/react';
 import { MdDelete, MdEditSquare } from 'react-icons/md';
+import { useState } from 'react';
 const CardStation = ({
-    status = 'kosong',
+    status = 'available',
     nameStation,
     nameConsole,
     namePackage,
     price,
     onClickDelete,
     onClickEdit,
-    valueBilling,
     onChangeBilling,
+    onClickStart,
+    time,
+    id_station,
 }) => {
+    const [isTimeUp, setIsTimeUp] = useState(false);
     return (
-        <VStack w={'52'} h={'60'} rounded={'sm'} bg={'var(--color-container)'} boxShadow={'md'} position={'relative'}>
+        <VStack
+            w={'52'}
+            h={'60'}
+            rounded={'sm'}
+            bg={'var(--color-container)'}
+            boxShadow={'md'}
+            position={'relative'}
+            className={
+                isTimeUp
+                    ? 'border! border-blue-500! animate-danger-glow'
+                    : status === 'used'
+                      ? 'border! border-red-500!'
+                      : null
+            }
+        >
             <HStack position={'absolute'} w={'full'} justifyContent={'space-between'} top={12}>
                 <IconButton
                     size={'xs'}
@@ -54,12 +72,17 @@ const CardStation = ({
             />
             {/* EndHeader */}
             {/* Body */}
-            {status === 'kosong' ? (
-                <CardBodyStationEmpty price={price} defaultValue={valueBilling} onChange={onChangeBilling} />
+            {status === 'available' ? (
+                <CardBodyStationEmpty
+                    price={price}
+                    onChange={onChangeBilling}
+                    onClickStart={onClickStart}
+                    billing={time}
+                />
             ) : (
-                <CardBodyStationUsed price={price} />
+                <CardBodyStationUsed id_station={id_station} onTimeUp={boolean => setIsTimeUp(boolean)} />
             )}
-            {/* End Body */}
+            {/* End Body*/}
         </VStack>
     );
 };

@@ -14,3 +14,26 @@ body {
 #root {
     min-height: 100vh;
 }
+
+@theme {
+    --animate-playing-glow: playing-glow 4s ease-in-out infinite;
+    --animate-danger-glow: danger-glow 1.2s ease-in-out infinite;
+
+    @keyframes danger-glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 1);
+        }
+    }
+
+    @keyframes playing-glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(239, 68, 68, 0.4);
+        }
+        50% {
+            box-shadow: 0 0 25px rgba(239, 68, 68, 1);
+        }
+    }
+}
