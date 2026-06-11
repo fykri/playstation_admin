@@ -19,9 +19,11 @@ const insertStation = async (id_console, name_station) => {
 };
 
 const selectAllStation = async () => {
-    return await pool.query(
+    const result = await pool.query(
         'SELECT s.id_station, s.id_console, s.name_station, s.status, s.billing ,c.console_type, c.package, c.hourly_price FROM station s JOIN console c ON s.id_console = c.id_console',
     );
+    if (result.rowCount === 0) throwStatus('station not found', 404);
+    return result;
 };
 
 const updateStation = async (id_station, data) => {
@@ -104,13 +106,18 @@ const getConsolesWithAvailability = async (id_console = null) => {
 };
 
 const upsertStation = async (id_station, time) => {
-    const client = await pool.connect();
     try {
         const intervalString = `${time} hour`;
-        await client.query('BEGIN');
-        await client.query('UPDATE station SET status=$1, billing=$2 WHERE id_station=$3', ['used', time, id_station]);
+        const stationResult = await pool.query(
+            "UPDATE station SET status='used', billing=$1 WHERE id_station=$2 AND status='available' RETURNING *",
+            [time, id_station],
+        );
 
-        const priceQuery = await client.query(
+        if (stationResult.rowCount === 0) {
+            throwStatus('Station tidak ditemukan', 404);
+        }
+
+        const priceQuery = await pool.query(
             'SELECT c.hourly_price from station s JOIN console c ON s.id_console = c.id_console WHERE s.id_station = $1',
             [id_station],
         );
@@ -119,16 +126,13 @@ const upsertStation = async (id_station, time) => {
 
         const total_price = priceQuery.rows[0].hourly_price * Number(time);
 
-        await client.query(
+        const result = await pool.query(
             'INSERT INTO session (id_station, start_time, end_time, total_price, total_billing) VALUES ($1, NOW(), NOW() + $2::INTERVAL ,$3, $4)',
             [id_station, intervalString, total_price, time],
         );
-        await client.query('COMMIT');
+        if (result.rowCount === 0) throwStatus('gagal', 400);
     } catch (error) {
-        await client.query('ROLLBACK');
         throw error;
-    } finally {
-        client.release();
     }
 };
 

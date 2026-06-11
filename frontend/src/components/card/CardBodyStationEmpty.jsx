@@ -1,8 +1,14 @@
 import { VStack, Badge, HStack, Text, Button } from '@chakra-ui/react';
 import { useBillingStore } from '@/stores/useStationStore';
 import BillingControl from '../BillingControl';
-const CardBodyStationEmpty = ({ price, onChange, onClickStart, billing }) => {
-    const loading = useBillingStore(state => state.loadingStoreStation);
+import { useShallow } from 'zustand/react/shallow';
+const CardBodyStationEmpty = ({ price, onChange, billing, id_station }) => {
+    const { startStation, loading } = useBillingStore(
+        useShallow(state => ({
+            startStation: state.startStation,
+            loading: state.loadingStoreStation
+        })),
+    );
     return (
         <VStack
             flex={2}
@@ -26,7 +32,10 @@ const CardBodyStationEmpty = ({ price, onChange, onClickStart, billing }) => {
                 loading={loading}
                 loadingText="Loading"
                 spinnerPlacement="start"
-                onClick={onClickStart}
+                onClick={() => {
+                    if(!id_station || id_station === '') return
+                    startStation(id_station, billing)
+                }}
             >
                 MULAI
             </Button>

@@ -9,7 +9,7 @@ import { toaster } from '../ui/toaster';
 import { useBillingStore } from '@/stores/useStationStore';
 import AddTimePopover from '../addTimerPopover';
 
-const CardBodyStationUsed = ({ id_station = '', onTimeUp }) => {
+const CardBodyStationUsed = ({ id_station = '', onExpiredChange }) => {
     const [sessionTime, setSessionTime] = useState({
         endTime: null,
         statusSession: 'idle',
@@ -40,6 +40,12 @@ const CardBodyStationUsed = ({ id_station = '', onTimeUp }) => {
     };
 
     useEffect(() => {
+        if (sessionTime.endTime) {
+            onExpiredChange?.(false);
+        }
+    }, [sessionTime.endTime]);
+
+    useEffect(() => {
         getTimeSession();
     }, [id_station]);
 
@@ -48,7 +54,7 @@ const CardBodyStationUsed = ({ id_station = '', onTimeUp }) => {
         endTime: sessionTime.endTime,
         status: sessionTime.statusSession,
         onTimeUp: () => {
-            onTimeUp?.(true);
+            onExpiredChange?.(true);
         },
     });
 
@@ -58,12 +64,12 @@ const CardBodyStationUsed = ({ id_station = '', onTimeUp }) => {
             if (!id_station) return;
             await cancelledStation(id_station);
             await fetchStation();
+            onExpiredChange?.(false);
             toaster.dismiss();
             toaster.create({
                 title: 'station cancel',
                 type: 'info',
             });
-            onTimeUp?.(false)
         } catch (error) {
             toaster.create({
                 title: error.message,
@@ -78,12 +84,12 @@ const CardBodyStationUsed = ({ id_station = '', onTimeUp }) => {
         try {
             if (!id_station || id_station === '') return;
             await addBilling(id_station, hours);
+            onExpiredChange?.(false);
             await getTimeSession();
             toaster.create({
                 title: `berhasil tambah waktu ${hours}`,
                 type: 'success',
             });
-            onTimeUp?.(false)
         } catch (error) {
             toaster.create({
                 title: error.message,

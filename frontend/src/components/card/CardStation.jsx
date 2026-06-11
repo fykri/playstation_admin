@@ -14,7 +14,6 @@ const CardStation = ({
     onClickDelete,
     onClickEdit,
     onChangeBilling,
-    onClickStart,
     time,
     id_station,
 }) => {
@@ -32,7 +31,7 @@ const CardStation = ({
                     ? 'border! border-blue-500! animate-danger-glow'
                     : status === 'used'
                       ? 'border! border-red-500!'
-                      : null
+                      : ''
             }
         >
             <HStack position={'absolute'} w={'full'} justifyContent={'space-between'} top={12}>
@@ -76,11 +75,11 @@ const CardStation = ({
                 <CardBodyStationEmpty
                     price={price}
                     onChange={onChangeBilling}
-                    onClickStart={onClickStart}
                     billing={time}
+                    id_station={id_station}
                 />
             ) : (
-                <CardBodyStationUsed id_station={id_station} onTimeUp={boolean => setIsTimeUp(boolean)} />
+                <CardBodyStationUsed id_station={id_station} onExpiredChange={setIsTimeUp} />
             )}
             {/* End Body*/}
         </VStack>

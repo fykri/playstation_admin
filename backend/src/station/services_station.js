@@ -39,7 +39,10 @@ const startStation = async (id_station, time) => {
     try {
         validateNotEmpty({ id_station, time });
         isUUID(id_station);
-        upsertStation(id_station, time);
+        if (!Number.isInteger(Number(time)) || Number(time) <= 0) {
+            throwStatus('Waktu tidak valid', 400);
+        }
+        await upsertStation(id_station, time);
     } catch (error) {
         throw error;
     }

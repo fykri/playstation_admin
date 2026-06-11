@@ -17,7 +17,7 @@ import AlertDialog from '@/components/dialog/AlertDialog';
 import SelectInputConsole from '@/components/select/SelectInputConsole';
 import TabsStation from '@/components/TabsStation';
 import { useBillingStore } from '@/stores/useStationStore';
-import { useShallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import EmptyStatus from '@/components/EmptyStatus';
 
 const Station = () => {

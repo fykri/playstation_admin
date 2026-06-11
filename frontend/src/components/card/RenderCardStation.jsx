@@ -2,12 +2,11 @@ import { Grid } from '@chakra-ui/react';
 import CardStation from './CardStation';
 import { formatRupiah } from '@/utils/formatNumber';
 import { useBillingStore } from '@/stores/useStationStore';
-import { useShallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 const RenderStationCards = ({ items, onDelete, onEdit }) => {
-    const { setBilling, startStation } = useBillingStore(
+    const { setBilling } = useBillingStore(
         useShallow(state => ({
             setBilling: state.setBilling,
-            startStation: state.startStation,
         })),
     );
     return (
@@ -25,7 +24,6 @@ const RenderStationCards = ({ items, onDelete, onEdit }) => {
                     onChangeBilling={valueItems => {
                         setBilling(val.id_station, valueItems.valueAsNumber);
                     }}
-                    onClickStart={() =>  startStation(val?.id_station, val?.billing)}
                     nameConsole={val.console_type?.toUpperCase()}
                     namePackage={val.package?.toUpperCase()}
                     nameStation={val.name_station?.toUpperCase()}

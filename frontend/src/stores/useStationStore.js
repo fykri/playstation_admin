@@ -7,7 +7,6 @@ export const useBillingStore = create((set, get) => ({
     loadingStoreStation: false,
     fetchStation: async () => {
         try {
-            console.log('fetch station')
             const result = await getAllStation();
             set({
                 stationItems: result.map(val => {
@@ -45,7 +44,6 @@ export const useBillingStore = create((set, get) => ({
             loadingStoreStation: true,
         });
         try {
-            console.log('masuk ke start billing')
             await startbilling(id, time);
             await get().fetchStation();
             toaster.dismiss();
