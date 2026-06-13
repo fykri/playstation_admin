@@ -15,12 +15,10 @@ const TabsStation = ({ statusStation, onEdit, onDelete }) => {
             </Tabs.List>
 
             <Tabs.Content value="all">
-                {/*{RenderStationCards(statusStation)}*/}
                 <RenderStationCards items={statusStation} onDelete={onDelete} onEdit={onEdit} />
             </Tabs.Content>
 
             <Tabs.Content value="reguler">
-                {/*{RenderStationCards(filterByPackage(statusStation, 'reguler'))}*/}
                 <RenderStationCards
                     items={filterByPackage(statusStation, 'reguler')}
                     onDelete={onDelete}
@@ -29,7 +27,6 @@ const TabsStation = ({ statusStation, onEdit, onDelete }) => {
             </Tabs.Content>
 
             <Tabs.Content value="vip">
-                {/*{RenderStationCards(filterByPackage(statusStation, 'vip'))}*/}
                 <RenderStationCards items={filterByPackage(statusStation, 'vip')} onDelete={onDelete} onEdit={onEdit} />
             </Tabs.Content>
         </Tabs.Root>
