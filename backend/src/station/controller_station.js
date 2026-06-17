@@ -1,5 +1,5 @@
 const { selectAllStation, selectALlConsoleByQty, getConsolesWithAvailability } = require('./repository_station');
-const { addStation, updateDataStation, deleteDataStation, startStation } = require('./services_station');
+const { addStation, updateDataStation, deleteDataStation, startStation, finishStation } = require('./services_station');
 
 const router = require('express').Router();
 
@@ -91,6 +91,19 @@ router.post('/start-billing/:id_station', async (req, res, next) => {
         res.status(201).json({
             success: true,
             message: 'berhasil upsert station & session',
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.patch('/finish/:id_station', async (req, res, next) => {
+    try {
+        const { id_station } = req.params;
+        const { name_station } = await finishStation(id_station);
+        res.status(200).json({
+            message: `finish station ${name_station}`,
+            success: true,
         });
     } catch (error) {
         next(error);

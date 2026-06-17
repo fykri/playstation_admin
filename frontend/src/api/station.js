@@ -90,3 +90,15 @@ export const startbilling = async (id_station, time) => {
     }
 };
 
+export const finishStation = async id_station => {
+    try {
+        const { data } = await api.patch(`/station/finish/${id_station}`);
+        return data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};

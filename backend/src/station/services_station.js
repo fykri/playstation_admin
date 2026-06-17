@@ -1,6 +1,12 @@
 const throwStatus = require('../utils/throwStatus');
 const { validateNotEmpty, isUUID } = require('../utils/validateInput');
-const { insertStation, updateStation, deleteStation, upsertStation } = require('./repository_station');
+const {
+    insertStation,
+    updateStation,
+    deleteStation,
+    upsertStation,
+    updateStatusForFinish,
+} = require('./repository_station');
 
 const addStation = async (id_console, name_station) => {
     try {
@@ -48,4 +54,15 @@ const startStation = async (id_station, time) => {
     }
 };
 
-module.exports = { addStation, updateDataStation, deleteDataStation, startStation };
+const finishStation = async id_station => {
+    try {
+        validateNotEmpty({ id_station });
+        isUUID(id_station);
+        const result = await updateStatusForFinish(id_station);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+
+module.exports = { addStation, updateDataStation, deleteDataStation, startStation, finishStation };

@@ -136,6 +136,24 @@ const upsertStation = async (id_station, time) => {
     }
 };
 
+const updateStatusForFinish = async id_station => {
+    try {
+        const updateStation = await pool.query(
+            "UPDATE station SET status = 'available' WHERE id_station = $1 RETURNING *",
+            [id_station],
+        );
+        if (updateStation.rowCount === 0) throwStatus('gagal update station', 400);
+        const updateSession = await pool.query(
+            "UPDATE session SET status = 'finished' where id_station=$1 AND status='playing'",
+            [id_station],
+        );
+        if (updateSession.rowCount === 0) throwStatus('gagal update session', 400);
+        return { name_station: updateStation.rows[0].name_station };
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     insertStation,
     selectAllStation,
@@ -144,4 +162,5 @@ module.exports = {
     selectALlConsoleByQty,
     getConsolesWithAvailability,
     upsertStation,
+    updateStatusForFinish,
 };

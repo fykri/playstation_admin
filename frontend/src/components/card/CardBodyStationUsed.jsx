@@ -8,7 +8,7 @@ import { useCountdown } from '@/hooks/useCountdown';
 import { toaster } from '../ui/toaster';
 import { useBillingStore } from '@/stores/useStationStore';
 import AddTimePopover from '../addTimerPopover';
-
+import { finishStation } from '@/api/station';
 const CardBodyStationUsed = ({ id_station = '', onExpiredChange }) => {
     const [sessionTime, setSessionTime] = useState({
         endTime: null,
@@ -100,6 +100,25 @@ const CardBodyStationUsed = ({ id_station = '', onExpiredChange }) => {
         }
     };
 
+    const handleFinish = async () => {
+        setLoading(true);
+        try {
+            const result = await finishStation(id_station);
+            await fetchStation()
+            toaster.create({
+                type: 'success',
+                title: result.message,
+            });
+        } catch (error) {
+            toaster.create({
+                type: 'error',
+                title: error.message
+            })
+        } finally {
+            setLoading(false)
+        }
+    };
+
     return (
         <VStack
             flex={2}
@@ -158,7 +177,7 @@ const CardBodyStationUsed = ({ id_station = '', onExpiredChange }) => {
                 </Tooltip>
 
                 <Tooltip content="selesai" showArrow>
-                    <IconButton size={'xs'} colorPalette={'blue'} loading={loading}>
+                    <IconButton size={'xs'} colorPalette={'blue'} loading={loading} onClick={handleFinish}>
                         <LuSquare />
                     </IconButton>
                 </Tooltip>
