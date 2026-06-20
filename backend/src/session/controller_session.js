@@ -2,8 +2,9 @@ const router = require('express').Router();
 const {
     getTimeSession,
     cancelledStation,
-
+    filterSessionByPeriode,
     addBillingPause,
+    filterByRentang
 } = require('./services_session');
 
 router.get('/time/:id_station', async (req, res, next) => {
@@ -46,4 +47,32 @@ router.patch('/add-billing/:id_station', async (req, res, next) => {
         next(error);
     }
 });
+
+router.get('/filter', async(req,res,next)=> {
+    const {periode, status} = req.query;
+    try {
+        const result = await filterSessionByPeriode(periode, status)
+        res.status(200).json({
+            success: true,
+            message: 'data berhasil didapatkan',
+            data: result
+        })
+    } catch (error) {
+        next (error)
+    }
+})
+
+router.get('/filter-rentang', async(req,res,next)=> {
+    const {startDate, endDate, status} = req.query;
+    try {
+        const result = await filterByRentang(startDate, endDate, status)
+        res.status(200).json({
+            success: true,
+            message: 'data berhasil didapatkan',
+            data: result
+        })
+    } catch (error) {
+        next (error)
+    }
+})
 module.exports = router;

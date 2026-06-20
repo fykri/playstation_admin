@@ -53,7 +53,7 @@ const updateSessionForAddBilling = async (id_station, additionalHours) => {
         );
         if (activeSession.rowCount === 0) throwStatus('Sesi aktif tidak ditemukan!', 404);
         const endTimeOld = new Date(activeSession.rows[0].end_time).getTime();
-        const additionalMillisecond = Number(additionalHours) * 60 * 60 * 1000
+        const additionalMillisecond = Number(additionalHours) * 60 * 60 * 1000;
         const newEndTime = new Date(endTimeOld + additionalMillisecond);
         const newTotalPrice =
             activeSession.rows[0].hourly_price * Number(additionalHours) + activeSession.rows[0].total_price;
@@ -69,4 +69,76 @@ const updateSessionForAddBilling = async (id_station, additionalHours) => {
     }
 };
 
-module.exports = { selectTimeSession, updateSessionForCancel, updateSessionForAddBilling };
+const selectDataByPeriode = async (periode, status) => {
+    try {
+        let query =
+            'SELECT se.id_session, st.name_station, se.start_time, se.end_time, se.total_billing, se.status, se.total_price FROM session se JOIN station st ON se.id_station = st.id_station WHERE 1=1';
+        const values = [];
+
+        // Filter periode
+        if (periode === 'today') {
+            query += ' AND se.created_at::date = CURRENT_DATE';
+        } else if (periode === 'week') {
+            query += " AND se.created_at >= date_trunc('week', NOW())";
+        } else if (periode === 'month') {
+            query += " AND se.created_at >= date_trunc('month', NOW())";
+        } else if (periode === 'year') {
+            query += " AND se.created_at >= date_trunc('year', NOW())";
+        }
+
+        // Filter status
+        if (status && status !== 'all') {
+            query += ` AND se.status = $1`;
+            values.push(status);
+        }
+
+        query += ' ORDER BY se.created_at DESC';
+
+        const { rows } = await pool.query(query, values);
+
+        return rows;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const selectDataByRentang = async (startDate, endDate, status) => {
+    try {
+        let query = `
+    SELECT
+        se.id_session,
+        st.name_station,
+        se.start_time,
+        se.end_time,
+        se.total_billing,
+        se.status,
+        se.total_price
+    FROM session se
+    JOIN station st ON se.id_station = st.id_station
+    WHERE se.created_at::date BETWEEN $1 AND $2
+`;
+
+        const values = [startDate, endDate];
+
+        if (status !== 'all') {
+            query += ' AND se.status = $3';
+            values.push(status);
+        }
+
+        query += ' ORDER BY se.created_at DESC';
+
+        const result = await pool.query(query, values);
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+module.exports = {
+    selectTimeSession,
+    updateSessionForCancel,
+    updateSessionForAddBilling,
+    selectDataByPeriode,
+    selectDataByRentang,
+};
