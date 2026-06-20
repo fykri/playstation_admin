@@ -6,7 +6,7 @@ const EmptyState = ({
   description = "Belum ada data yang tersedia",
 }) => {
   return (
-    <VStack py={10} gap={3} color="gray.500" h={'md'} justifyContent={'center'}>
+    <VStack py={10} gap={3} color="gray.500" h={'sm'} justifyContent={'center'}>
       <Icon as={LuInbox} boxSize={10} />
       <Text fontWeight="bold">{title}</Text>
       <Text fontSize="sm">{description}</Text>

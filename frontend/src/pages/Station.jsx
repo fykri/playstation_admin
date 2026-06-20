@@ -289,7 +289,7 @@ const Station = () => {
                     />
                 )}
             </Box>
-            <Box>
+            <Box mb={'50px'}>
                 <TitleStatusStation status={'Digunakan'} lengthStatus={occupiedStations.length} colorFont={'red.400'}>
                     <LuMonitorPlay />
                 </TitleStatusStation>

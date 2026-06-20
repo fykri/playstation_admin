@@ -7,8 +7,9 @@ const Paginations = ({ items = [], page, setPage, pageSize }) => {
             pageSize={pageSize}
             page={page}
             onPageChange={(e) => setPage(e.page)}
+            alignSelf={'center'}
         >
-            <ButtonGroup>
+            <ButtonGroup variant="ghost" size="sm" wrap="wrap">
                 <Pagination.PrevTrigger asChild>
                     <IconButton>
                         <HiChevronLeft />
@@ -18,7 +19,7 @@ const Paginations = ({ items = [], page, setPage, pageSize }) => {
                 <Pagination.Items
                     render={(page) => (
                         <IconButton
-                            variant={{ base: "outline", _selected: "solid" }}
+                            variant={{ base: "ghost", _selected: "surface" }}
                         >
                             {page.value}
                         </IconButton>

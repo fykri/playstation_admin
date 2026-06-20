@@ -296,9 +296,9 @@ const Console = () => {
                             justifyContent="space-between"
                             minH="500px"
                         >
-                            <Table.Root size={'sm'} tableLayout="fixed">
+                            <Table.Root size={'sm'} tableLayout="fixed"  rounded={'md'}>
                                 <Table.Header>
-                                    <Table.Row bg="none">
+                                    <Table.Row bg="none" >
                                         {['Tipe konsol', 'Paket', 'Kuantitas', 'Harga Perjam', 'Aksi'].map(
                                             (value, index) => (
                                                 <Table.ColumnHeader key={index}>{value}</Table.ColumnHeader>
@@ -401,7 +401,7 @@ const Console = () => {
                                     })}
                                 </Table.Body>
                             </Table.Root>
-                            {currentData.length > 8 && (
+                            {dataConsole.length >= 8 && (
                                 <Paginations pageSize={pageSize} page={page} setPage={setPage} items={dataConsole} />
                             )}
                         </Box>
