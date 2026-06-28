@@ -16,8 +16,8 @@ const SearchInput = ({
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                borderRadius="lg"
-                bg="bg.panel"
+                borderRadius="md"
+                bg="var(--color-primary)"
             />
         </InputGroup>
     );
