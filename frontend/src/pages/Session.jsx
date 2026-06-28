@@ -10,6 +10,7 @@ import { formatRupiah } from '@/utils/formatNumber';
 import { toaster } from '@/components/ui/toaster';
 import EmptyState from '@/components/EmptyState';
 import SearchInput from '@/components/input/InputSearch';
+import { setDate } from '@/utils/formatDate';
 
 const statusColor = {
     playing: 'green.500',
@@ -72,10 +73,6 @@ const formatStatusToId = title => {
         return val.status === title;
     });
     return result.title;
-};
-
-const setDate = date => {
-    return `${date?.year}-${String(date?.month).padStart(2, '0')}-${String(date?.day).padStart(2, '0')}`;
 };
 
 const SessionPage = () => {
@@ -172,7 +169,7 @@ const SessionPage = () => {
                 </HStack>
             </VStack>
             <HStack gap={2} mt={5} justifyContent={'space-between'}>
-                <HStack >
+                <HStack>
                     <Tag.Root colorPalette={'green'}>
                         <Tag.Label>{setBadgePeriode(period)}</Tag.Label>
                     </Tag.Root>
@@ -180,9 +177,7 @@ const SessionPage = () => {
                         <Tag.Label>{formatStatusToId(status)}</Tag.Label>
                     </Tag.Root>
                 </HStack>
-                <Box>
-                    <SearchInput/>
-                </Box>
+                <Box>{items.length > 0 ? <SearchInput /> : null}</Box>
             </HStack>
             <Box
                 display="flex"
