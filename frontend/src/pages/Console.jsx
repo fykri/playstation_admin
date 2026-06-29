@@ -110,6 +110,7 @@ const Console = () => {
     // handle API POST console
     const handleSubmitAddConsole = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             validateData(dataField);
             await postConsole(dataField);
@@ -191,7 +192,6 @@ const Console = () => {
                 cancelTitle={'cancel'}
                 saveTitle={'submit'}
                 titleHeader={'Tambah Konsol'}
-                titleTrigger={'Tambah Konsol'}
                 open={openDialog}
                 onClick={handleSubmitAddConsole}
                 setOpen={e => {
@@ -218,6 +218,7 @@ const Console = () => {
                             {consolesListSelect.items.map(items => (
                                 <Select.Item item={items} key={items.value}>
                                     {items.value}
+                                    <Select.ItemIndicator />
                                 </Select.Item>
                             ))}
                         </SelectContainer>
