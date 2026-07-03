@@ -157,8 +157,6 @@ const Station = () => {
                 sensitivity: 'base',
             }),
         );
-
-    console.log('station items: ', stationItems);
     const availableStations = sortStation(stationItems.filter(item => item.status === 'available'));
 
     const occupiedStations = sortStation(stationItems.filter(item => item.status === 'used'));
