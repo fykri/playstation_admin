@@ -7,6 +7,7 @@ import DashboardPage from './pages/Dashboard';
 import Console from './pages/Console';
 import Station from './pages/Station';
 import SessionPage from './pages/Session';
+import Booking from './pages/booking/Booking';
 function App() {
     return (
         <Routes>
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/consoles" element={<Console />} />
                     <Route path="/station" element={<Station />}></Route>
                     <Route path="/session" element={<SessionPage />}></Route>
+                    <Route path="/booking" element={<Booking />}></Route>
                 </Route>
             </Route>
         </Routes>
