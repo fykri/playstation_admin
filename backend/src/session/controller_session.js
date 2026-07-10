@@ -4,7 +4,8 @@ const {
     cancelledStation,
     filterSessionByPeriode,
     addBillingPause,
-    filterByRentang
+    filterByRentang,
+    getSessionPlaying
 } = require('./services_session');
 
 router.get('/time/:id_station', async (req, res, next) => {
@@ -73,6 +74,19 @@ router.get('/filter-rentang', async(req,res,next)=> {
         })
     } catch (error) {
         next (error)
+    }
+})
+
+router.get('/session-playing', async(req,res,next)=> {
+    try {
+        const result = await getSessionPlaying()
+        res.status(200).json({
+            success: true,
+            message: 'berhasil mendapatkan data',
+            data: result
+        })
+    } catch (error) {
+        next(error)
     }
 })
 module.exports = router;

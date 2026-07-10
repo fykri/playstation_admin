@@ -130,8 +130,19 @@ const selectDataByRentang = async (startDate, endDate, status) => {
         const result = await pool.query(query, values);
         return result.rows;
     } catch (error) {
-        console.log(error);
         throw error;
+    }
+};
+
+const selectSessionPlaying = async () => {
+    try {
+        const result = await pool.query(
+            "SELECT se.id_session, se.start_time, se.end_time, st.name_station from SESSION se INNER JOIN station st ON se.id_station = st.id_station WHERE se.status='playing'",
+        );
+        if(result.rowCount === 0) throwStatus('tidak ada station yang aktif', 404)
+        return result.rows
+    } catch (error) {
+        throw error
     }
 };
 
@@ -141,4 +152,5 @@ module.exports = {
     updateSessionForAddBilling,
     selectDataByPeriode,
     selectDataByRentang,
+    selectSessionPlaying
 };
