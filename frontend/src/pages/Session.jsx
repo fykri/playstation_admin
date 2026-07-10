@@ -140,10 +140,10 @@ const SessionPage = () => {
                 {/* BUTTON PERIODE CUSTOM*/}
                 {period === 'costum' && (
                     <HStack>
-                        <DatePickerUi value={startDate} onChange={setStartDate} />
+                        <DatePickerUi value={startDate} onChange={(e)=> setStartDate(e.value)} />
 
                         <Text color="fg.muted">→</Text>
-                        <DatePickerUi value={endDate} onChange={setEndDate} />
+                        <DatePickerUi value={endDate} onChange={(e)=> setEndDate(e.value)} />
 
                         <Button colorPalette={'cyan'} variant={'surface'} onClick={handleFilterByRentang}>
                             Terapkan

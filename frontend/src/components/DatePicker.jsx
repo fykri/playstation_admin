@@ -1,4 +1,4 @@
-import { DatePicker, parseDate, Portal } from '@chakra-ui/react';
+import { DatePicker, Portal } from '@chakra-ui/react';
 import { LuCalendar } from 'react-icons/lu';
 
 const DatePickerUi = ({ value, onChange,label }) => {
