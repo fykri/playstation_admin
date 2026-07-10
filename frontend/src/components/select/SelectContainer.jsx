@@ -1,14 +1,8 @@
-import { Select, Portal } from '@chakra-ui/react';
+import { Select } from '@chakra-ui/react';
 
-const SelectContainer = ({ collection, label, children, value, placeholder, onValueChange, classname }) => {
+const SelectContainer = ({ collection, label, children, value, placeholder, onValueChange }) => {
     return (
-        <Select.Root
-            collection={collection}
-            size="sm"
-            value={value}
-            onValueChange={onValueChange}
-            className={classname}
-        >
+        <Select.Root collection={collection} size="sm" value={value} onValueChange={onValueChange}>
             <Select.HiddenSelect />
             {label && <Select.Label>{label}</Select.Label>}
             <Select.Control>
@@ -19,11 +13,10 @@ const SelectContainer = ({ collection, label, children, value, placeholder, onVa
                     <Select.Indicator />
                 </Select.IndicatorGroup>
             </Select.Control>
-            <Portal>
-                <Select.Positioner>
-                    <Select.Content>{children}</Select.Content>
-                </Select.Positioner>
-            </Portal>
+
+            <Select.Positioner>
+                <Select.Content>{children}</Select.Content>
+            </Select.Positioner>
         </Select.Root>
     );
 };

@@ -1,12 +1,15 @@
-import { DatePicker, Portal } from '@chakra-ui/react';
+import { DatePicker, parseDate, Portal } from '@chakra-ui/react';
 import { LuCalendar } from 'react-icons/lu';
 
-const DatePickerUi = ({ value, onChange }) => {
+const DatePickerUi = ({ value, onChange,label }) => {
     return (
         <DatePicker.Root
             value={value}
-            onValueChange={(e) => onChange(e.value)}
+            onValueChange={onChange}
         >
+            {label && (
+                <DatePicker.Label>{label}</DatePicker.Label>
+            )}
             <DatePicker.Control>
                 <DatePicker.Input />
                 <DatePicker.IndicatorGroup>

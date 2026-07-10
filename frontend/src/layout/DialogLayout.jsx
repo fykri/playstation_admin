@@ -1,6 +1,6 @@
-import { Dialog, Stack, CloseButton } from "@chakra-ui/react";
-import DialogHeader from "@/components/dialog/DialogHeader";
-import DialogFooter from "@/components/dialog/DialogFooter";
+import { Dialog, Stack, CloseButton } from '@chakra-ui/react';
+import DialogHeader from '@/components/dialog/DialogHeader';
+import DialogFooter from '@/components/dialog/DialogFooter';
 
 const DialogLayout = ({
     titleHeader,
@@ -11,9 +11,11 @@ const DialogLayout = ({
     onClick,
     setOpen,
     loading,
+    size,
+    alert,
 }) => {
     return (
-        <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Root open={open} onOpenChange={setOpen} size={size}>
             <Dialog.Backdrop />
             <Dialog.Positioner>
                 <Dialog.Content>
@@ -21,12 +23,15 @@ const DialogLayout = ({
                     <Dialog.Body>
                         <Stack gap={4}>{children}</Stack>
                     </Dialog.Body>
-                    <DialogFooter
-                        cancelTitle={cancelTitle}
-                        saveTitle={saveTitle}
-                        onClick={onClick}
-                        loading={loading}
-                    />
+                    {saveTitle && (
+                        <DialogFooter
+                            cancelTitle={cancelTitle}
+                            saveTitle={saveTitle}
+                            onClick={onClick}
+                            loading={loading}
+                            alert={alert}
+                        />
+                    )}
                     <Dialog.CloseTrigger asChild>
                         <CloseButton size="sm" />
                     </Dialog.CloseTrigger>
