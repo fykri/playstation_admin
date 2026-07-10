@@ -33,6 +33,10 @@ const periodeFilterData = [
         title: 'Bulan Ini',
     },
     {
+        periode: 'year',
+        title: 'Tahun Ini',
+    },
+    {
         periode: 'costum',
         title: 'Rentang Tanggal',
     },
