@@ -1,0 +1,8 @@
+ALTER TABLE booking
+ADD number_phone VARCHAR (20);
+
+ALTER TABLE booking
+ADD booking_date TIMESTAMPTZ NOT NULL;
+
+ALTER TABLE booking
+ADD COLUMN updated_at TIMESTAMPTZ DEFAULT NOW();

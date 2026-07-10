@@ -1,0 +1,1 @@
+ALTER TABLE booking ALTER COLUMN booking_date TYPE DATE USING booking_date::DATE;
