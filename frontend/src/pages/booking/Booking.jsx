@@ -1,5 +1,5 @@
 import NavbarLayout from '@/layout/NavbarLayout';
-import { Tabs, HStack, Button, VStack, Box } from '@chakra-ui/react';
+import { Tabs, Button, VStack, Box } from '@chakra-ui/react';
 import { LuCalendarCheck, LuHistory } from 'react-icons/lu';
 import { useState } from 'react';
 import BookingDialog from './BookingDialog';
