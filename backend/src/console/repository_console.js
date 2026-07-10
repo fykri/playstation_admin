@@ -19,7 +19,6 @@ const deleteData = async id_console => {
     try {
         return await pool.query('DELETE FROM console WHERE id_console = $1', [id_console]);
     } catch (error) {
-        console.log('error: ', error)
         if (error.code === '23503' || error.code === '23001') {
             throwStatus(
                 'console masih digunakan di station, harap hapus console yang ada di station terlebih dahulu',
