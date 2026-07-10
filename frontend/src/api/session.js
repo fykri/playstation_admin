@@ -75,3 +75,16 @@ export const filterSessionByRentang = async (startDate, endDate, status) => {
         }
     }
 };
+
+export const getSessionActive = async () => {
+    try {
+        const result = await api.get('/session/session-playing');
+        return result.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};
