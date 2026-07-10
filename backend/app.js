@@ -22,10 +22,12 @@ const authUser = require('./src/auth-user/controller_user');
 const consoles = require('./src/console/controller_console');
 const station = require('./src/station/controller_station');
 const session = require('./src/session/controller_session');
+const booking = require('./src/booking/controller_booking')
 app.use('/auth', authUser);
 app.use('/station', station);
 app.use('/consoles', consoles);
 app.use('/session', session);
+app.use('/booking', booking);
 
 //app.get("/test", verifyToken, (req, res, next) => {
 //    try {
