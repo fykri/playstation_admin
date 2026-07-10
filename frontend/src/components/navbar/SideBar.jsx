@@ -31,7 +31,7 @@ const BarMenu = [
 ];
 
 const SideBar = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div
             className={` flex flex-col ${isOpen ? "w-65" : "w-22"} transition-all relative duration-150 min-h-screen! bg-(--color-container) border-r-2!`}
