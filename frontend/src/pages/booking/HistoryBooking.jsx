@@ -1,4 +1,4 @@
-import { Button, HStack, Text, VStack, parseDate, Table, Box, Link } from '@chakra-ui/react';
+import { Button, HStack, Text, VStack, parseDate, Table, Box, Link, Badge } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import DatePickerUi from '@/components/DatePicker';
 import { getWithDate } from '@/api/booking';
@@ -10,6 +10,7 @@ import SpinnerJsx from '@/components/Spinner';
 import Paginations from '@/components/Paginations';
 import DialogLayout from '@/layout/DialogLayout';
 import BookingDetail from './DetailBooking';
+import { statusColor, formatStatusToId } from '@/utils/bookingUtlis';
 
 const listFilterHistoryBooking = [
     { title: 'Januari', value: 'january' },
@@ -26,23 +27,6 @@ const listFilterHistoryBooking = [
     { title: 'Desember', value: 'december' },
 ];
 
-const getBookingStatus = (bookingDate, bookingStart, graceMinutes = 30) => {
-    const bookingStartTime = new Date(`${bookingDate}T${bookingStart}`);
-
-    const bookingExpiredTime = new Date(bookingStartTime.getTime() + graceMinutes * 60 * 1000);
-
-    const now = new Date();
-
-    return {
-        canStart: now >= bookingStartTime && now <= bookingExpiredTime,
-
-        expired: now > bookingExpiredTime,
-
-        bookingStartTime,
-        bookingExpiredTime,
-    };
-};
-
 const formatYear = date => date.year.toString();
 const parseYear = string => {
     if (string === '' || !string) return;
@@ -57,13 +41,13 @@ const parseYear = string => {
 
 const valueTableHeader = ['Nama Station', 'Nama Pelanggan', 'Tanggal Booking', 'Jam Booking', 'Status', 'Detail'];
 
+
 const HistoryBooking = () => {
     const [selectedMonth, setselectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(() => parseDate([`${new Date().getFullYear()}-01-01`]));
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
     const { page, setPage, currentData, pageSize } = usePagination(items, 15);
-    const { fetchDataBooking } = useBookingStore(useShallow(state => ({ fetchDataBooking: state.fetchDataBooking })));
     const [selectedId, setSelectedId] = useState('');
     const [openDialogDetail, setOpenDialogDetail] = useState(false);
 
@@ -79,14 +63,6 @@ const HistoryBooking = () => {
         }
     };
 
-    const handleStatusExpired = async id_booking => {
-        try {
-            await updateBookingExpired(id_booking);
-            await fetchDataBooking();
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
 
     useEffect(() => {
         if (selectedMonth && selectedYear) {
@@ -146,10 +122,6 @@ const HistoryBooking = () => {
                         </Table.Header>
                         <Table.Body>
                             {currentData.map(val => {
-                                const booking = getBookingStatus(val?.booking_date, val?.booking_start);
-                                if (booking.expired) {
-                                    handleStatusExpired(val?.id_booking);
-                                }
                                 return (
                                     <Table.Row
                                         bg={'none'}
@@ -162,7 +134,9 @@ const HistoryBooking = () => {
                                         <Table.Cell>{val?.customer_name}</Table.Cell>
                                         <Table.Cell>{val?.booking_date}</Table.Cell>
                                         <Table.Cell>{`${String(val?.booking_start).slice(0, 5)} -- ${String(val?.booking_end).slice(0, 5)}`}</Table.Cell>
-                                        <Table.Cell>{val?.status}</Table.Cell>
+                                        <Table.Cell>
+                                            <Badge colorPalette={statusColor[val?.status]} variant={'surface'}>{formatStatusToId(val?.status)}</Badge>
+                                        </Table.Cell>
                                         <Table.Cell>
                                             <Link
                                                 as={'button'}

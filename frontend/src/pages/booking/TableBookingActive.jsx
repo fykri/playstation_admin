@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Link, HStack, IconButton, Box } from '@chakra-ui/react';
+import { Table, Link, HStack, IconButton, Box, Badge } from '@chakra-ui/react';
 import usePagination from '@/hooks/usePaginations';
 import Paginations from '@/components/Paginations';
 import EditDeleteButton from '@/components/button/EditDeleteButton';
@@ -13,6 +13,7 @@ import BookingDialog from './BookingDialog';
 import { toaster } from '@/components/ui/toaster';
 import AlertDialog from '@/components/dialog/AlertDialog';
 import EmptyState from '@/components/EmptyState';
+import { getBookingStatus, formatStatusToId, statusColor } from '@/utils/bookingUtlis';
 
 const valueTableHeader = [
     'Nama Station',
@@ -23,23 +24,6 @@ const valueTableHeader = [
     'Aksi',
     'Detail',
 ];
-
-const getBookingStatus = (bookingDate, bookingStart, graceMinutes = 30) => {
-    const bookingStartTime = new Date(`${bookingDate}T${bookingStart}`);
-
-    const bookingExpiredTime = new Date(bookingStartTime.getTime() + graceMinutes * 60 * 1000);
-
-    const now = new Date();
-
-    return {
-        canStart: now >= bookingStartTime && now <= bookingExpiredTime,
-
-        expired: now > bookingExpiredTime,
-
-        bookingStartTime,
-        bookingExpiredTime,
-    };
-};
 
 const TableBookingActive = () => {
     const [openDetail, setOpenDetail] = useState(false);
@@ -159,7 +143,11 @@ const TableBookingActive = () => {
                                         <Table.Cell>{val?.customer_name}</Table.Cell>
                                         <Table.Cell>{val?.booking_date}</Table.Cell>
                                         <Table.Cell>{`${String(val?.booking_start).slice(0, 5)} -- ${String(val?.booking_end).slice(0, 5)}`}</Table.Cell>
-                                        <Table.Cell>{val?.status}</Table.Cell>
+                                        <Table.Cell>
+                                            <Badge colorPalette={statusColor[val?.status]} variant={'surface'}>
+                                                {formatStatusToId(val?.status)}
+                                            </Badge>
+                                        </Table.Cell>
                                         <Table.Cell>
                                             <HStack gap={2}>
                                                 <IconButton
