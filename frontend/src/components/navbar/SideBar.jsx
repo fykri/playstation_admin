@@ -14,10 +14,10 @@ import { useState, useEffect } from 'react';
 import { FaPlaystation } from 'react-icons/fa';
 const BarMenu = [
     { name: 'Dashboard', icon: MdDashboard },
-    { name: 'Station', icon: MdSportsEsports },
-    { name: 'Session', icon: MdAccessTime },
-    { name: 'Booking', icon: MdEventAvailable },
     { name: 'Consoles', icon: MdGamepad },
+    { name: 'Station', icon: MdSportsEsports },
+    { name: 'Booking', icon: MdEventAvailable },
+    { name: 'Session', icon: MdAccessTime },
     { name: 'Report', icon: MdBarChart },
 ];
 
