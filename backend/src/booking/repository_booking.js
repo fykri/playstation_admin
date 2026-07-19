@@ -14,7 +14,7 @@ const checkCrash = async (payload, id_booking) => {
     `;
     const values = [id_station, booking_date, booking_start, booking_end, id_booking || null];
     const result = await pool.query(query, values);
-    console.log(result.rows)
+    console.log(result.rows);
     return result.rowCount > 0;
 };
 
@@ -51,7 +51,7 @@ const insertBooking = async (id_station, customer_name, booking_date, booking_st
 const selectBookingActive = async () => {
     try {
         const result = await pool.query(
-            "SELECT b.id_booking, b.id_station, s.name_station ,b.customer_name, b.booking_start, b.booking_end, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date FROM booking b INNER JOIN station s ON b.id_station = s.id_station WHERE b.status = 'booking'",
+            "SELECT b.id_booking, b.id_station, s.name_station ,b.customer_name, b.booking_start, b.booking_end, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date FROM booking b INNER JOIN station s ON b.id_station = s.id_station WHERE b.status = 'booking' ORDER BY b.created_at DESC",
         );
         if (result.rowCount === 0) throwStatus('tidak ada booking yang aktif', 404);
         return result.rows;
@@ -63,7 +63,7 @@ const selectBookingActive = async () => {
 const selectBookingForTableActive = async () => {
     try {
         const result = await pool.query(
-            "SELECT b.id_booking, b.id_station, s.name_station, b.customer_name, b.booking_start::time, b.booking_end::time, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date, b.status, b.number_phone from booking b INNER JOIN station s ON b.id_station = s.id_station INNER JOIN console c ON c.id_console = s.id_console WHERE b.status = 'booking'",
+            "SELECT b.id_booking, b.id_station, s.name_station, b.customer_name, b.booking_start::time, b.booking_end::time, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date, b.status, b.number_phone from booking b INNER JOIN station s ON b.id_station = s.id_station INNER JOIN console c ON c.id_console = s.id_console WHERE b.status = 'booking' ORDER BY b.created_at DESC",
         );
         return result.rows;
     } catch (error) {
@@ -139,6 +139,19 @@ const updateStatusCancel = async id_booking => {
     }
 };
 
+const selectBookingWithDate = async (year, month) => {
+    try {
+        const result = await pool.query(
+            "SELECT b.id_booking, b.id_station, s.name_station, b.customer_name, b.booking_start::time, b.booking_end::time, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date, b.status, b.number_phone from booking b INNER JOIN station s ON b.id_station = s.id_station INNER JOIN console c ON c.id_console = s.id_console WHERE b.created_at >= $1 AND b.created_at < $2 ORDER BY b.created_at DESC",
+            [year, month],
+        );
+        if (result.rowCount === 0) throwStatus('Data not found', 404);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     insertBooking,
     selectBookingActive,
@@ -147,4 +160,5 @@ module.exports = {
     updateBookingWithStatusExpired,
     updateDataBooking,
     updateStatusCancel,
+    selectBookingWithDate,
 };

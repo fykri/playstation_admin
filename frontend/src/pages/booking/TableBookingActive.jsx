@@ -118,7 +118,7 @@ const TableBookingActive = () => {
             </DialogLayout>
             {/* DETAIL DIALOG */}
 
-            {/* HAPUD DIALOG */}
+            {/* HAPUS DIALOG */}
             <AlertDialog
                 openAlert={openAlertDialog}
                 onOpenChange={e => setOpenAlertDialog(e.open)}

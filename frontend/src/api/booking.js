@@ -89,3 +89,21 @@ export const cancelBooking = async id_booking => {
         }
     }
 };
+
+export const getWithDate = async (year, month) => {
+    try {
+        const result = await api.get('booking/filter-date', {
+            params: {
+                year: year,
+                month: month,
+            },
+        });
+        return result.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};

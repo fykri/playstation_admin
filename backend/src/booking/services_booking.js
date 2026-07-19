@@ -7,7 +7,8 @@ const {
     selectBookingById,
     updateBookingWithStatusExpired,
     updateDataBooking,
-    updateStatusCancel
+    updateStatusCancel,
+    selectBookingWithDate,
 } = require('./repository_booking');
 const { formatHours } = require('../utils/formatTime');
 const getTimeDifference = require('../utils/getTimeDifference');
@@ -56,7 +57,7 @@ const getBookingActive = async () => {
                     customer_name: booking.customer_name,
                     booking_start: formatHours(booking.booking_start),
                     booking_end: formatHours(booking.booking_end),
-                    name_station: booking.name_station
+                    name_station: booking.name_station,
                 });
 
                 return acc;
@@ -164,12 +165,41 @@ const updateBooking = async (
 
 const cancelBooking = async id_booking => {
     try {
-        isUUID(id_booking)
-        return await updateStatusCancel(id_booking)
+        isUUID(id_booking);
+        return await updateStatusCancel(id_booking);
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
+
+const getBookingWithDate = async (year, month) => {
+    try {
+        validateNotEmpty(year, month);
+        const newMonth = parseInt(month) + 1;
+        const newYear = parseInt(year);
+        const beginningOfTheMonthUTC = new Date(Date.UTC(newYear, newMonth - 1, 1, 0, 0, 0)).toISOString();
+        const startOfNextMonthUTC = new Date(Date.UTC(newYear, newMonth, 1, 0, 0, 0)).toISOString();
+
+        const result = await selectBookingWithDate(beginningOfTheMonthUTC, startOfNextMonthUTC);
+        return result.map(val => {
+            const { hours } = getTimeDifference(val.booking_start, val.booking_end);
+            return {
+                id_booking: val.id_booking,
+                id_station: val.id_station,
+                name_station: val.name_station,
+                customer_name: val.customer_name,
+                booking_start: val.booking_start,
+                booking_end: val.booking_end,
+                booking_date: val.booking_date,
+                status: val.status,
+                number_phone: val.number_phone,
+                billing: Number(hours),
+            };
+        });
+    } catch (error) {
+        throw error;
+    }
+};
 
 module.exports = {
     addBooking,
@@ -178,5 +208,6 @@ module.exports = {
     getBookingById,
     updateBookingExpired,
     updateBooking,
-    cancelBooking
+    cancelBooking,
+    getBookingWithDate,
 };

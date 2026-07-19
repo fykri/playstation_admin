@@ -3,28 +3,28 @@ import { getBookingById } from '@/api/booking';
 import { useEffect, useState } from 'react';
 import { formatRupiah } from '@/utils/formatNumber';
 
+export default function BookingDetail({ id_booking }) {
+    const [booking, setBooking] = useState({});
 
-
-export default function BookingDetail({id_booking}) {
-    const [booking, setBooking] = useState([])
-
-    const fetchBookingItems = async()=> {
+    const fetchBookingItems = async () => {
         try {
-            const result = await getBookingById(id_booking)
-            setBooking(result.data)
+            const result = await getBookingById(id_booking);
+            setBooking(result.data);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
-    useEffect(()=> {
-        if(id_booking) {    
-            fetchBookingItems()
+    useEffect(() => {
+        if (id_booking) {
+            fetchBookingItems();
         }
-    }, [id_booking])
+    }, [id_booking]);
     return (
         <Box px={6}>
-            <Text color="gray.500" mb={2}>Informasi lengkap booking pelanggan</Text>
+            <Text color="gray.500" mb={2}>
+                Informasi lengkap booking pelanggan
+            </Text>
 
             <Grid
                 templateColumns={{
@@ -39,7 +39,7 @@ export default function BookingDetail({id_booking}) {
                         <Text color="gray.500">Status</Text>
 
                         <Badge mt={2} colorPalette="orange" width="fit-content">
-                            Booking
+                            {booking?.status}
                         </Badge>
                     </Card.Body>
                 </Card.Root>
@@ -104,7 +104,8 @@ export default function BookingDetail({id_booking}) {
                                 <Table.Cell fontWeight="medium">Jam</Table.Cell>
 
                                 <Table.Cell>
-                                    {String(booking?.booking_start).slice(0,5)} - {String(booking?.booking_end).slice(0,5)}
+                                    {String(booking?.booking_start).slice(0, 5)} -{' '}
+                                    {String(booking?.booking_end).slice(0, 5)}
                                 </Table.Cell>
                             </Table.Row>
 

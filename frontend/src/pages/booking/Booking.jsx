@@ -1,16 +1,17 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { Tabs, Button, VStack, Box } from '@chakra-ui/react';
 import { LuCalendarCheck, LuHistory } from 'react-icons/lu';
-import { useState } from 'react';
+import { useState} from 'react';
 import BookingDialog from './BookingDialog';
 import TableBookingActive from './TableBookingActive';
+import HistoryBooking from './HistoryBooking';
 
 const Booking = () => {
     const [openDialog, setOpenDialog] = useState(false);
     return (
         <NavbarLayout header={'BOOKING'}>
             {openDialog && <BookingDialog openDialog={openDialog} setOpenDialog={setOpenDialog} editData={null} />}
-            <Tabs.Root defaultValue={'bookingAktif'} mt={6}>
+            <Tabs.Root defaultValue={'bookingAktif'} mt={6} lazyMount unmountOnExit>
                 <Tabs.List>
                     <Tabs.Trigger value="bookingAktif">
                         <LuCalendarCheck />
@@ -32,7 +33,9 @@ const Booking = () => {
                         </Box>
                     </VStack>
                 </Tabs.Content>
-                <Tabs.Content value="riwayatBooking">Manage your projects</Tabs.Content>
+                <Tabs.Content value="riwayatBooking">
+                    <HistoryBooking/>
+                </Tabs.Content>
             </Tabs.Root>
         </NavbarLayout>
     );

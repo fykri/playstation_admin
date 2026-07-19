@@ -1,15 +1,17 @@
 import { DatePicker, Portal } from '@chakra-ui/react';
 import { LuCalendar } from 'react-icons/lu';
 
-const DatePickerUi = ({ value, onChange,label }) => {
+const DatePickerUi = ({ value, onChange, label, year, formatYear, parseYear}) => {
     return (
         <DatePicker.Root
+            format={formatYear}
+            parse={parseYear}
             value={value}
             onValueChange={onChange}
+            defaultView={year}
+            minView={year}
         >
-            {label && (
-                <DatePicker.Label>{label}</DatePicker.Label>
-            )}
+            {label && <DatePicker.Label>{label}</DatePicker.Label>}
             <DatePicker.Control>
                 <DatePicker.Input />
                 <DatePicker.IndicatorGroup>

@@ -7,6 +7,7 @@ const {
     updateBookingExpired,
     updateBooking,
     cancelBooking,
+    getBookingWithDate,
 } = require('./services_booking');
 router.post('/', async (req, res, next) => {
     try {
@@ -109,12 +110,25 @@ router.delete('/:id_booking', async (req, res, next) => {
         await cancelBooking(id_booking);
         res.status(200).json({
             success: true,
-            message: 'berhasil cancel booking'
-        })
+            message: 'berhasil cancel booking',
+        });
     } catch (error) {
         next(error);
     }
 });
 
+router.get('/filter-date', async (req, res, next) => {
+    try {
+        const { year, month } = req.query;
+        const result = await getBookingWithDate(year, month);
+        res.status(200).json({
+            success: true,
+            message: 'berhasil mendapatkan data',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;

@@ -1,6 +1,6 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { useEffect, useState } from 'react';
-import { HStack, Button, VStack, Text, Table, Box, Tag, Spinner } from '@chakra-ui/react';
+import { HStack, Button, VStack, Text, Table, Box, Tag } from '@chakra-ui/react';
 import { filterSession, filterSessionByRentang } from '@/api/session';
 import DatePickerUi from '@/components/DatePicker';
 import usePagination from '@/hooks/usePaginations';
@@ -11,6 +11,7 @@ import { toaster } from '@/components/ui/toaster';
 import EmptyState from '@/components/EmptyState';
 import SearchInput from '@/components/input/InputSearch';
 import { setDate } from '@/utils/formatDate';
+import SpinnerJsx from '@/components/Spinner';
 
 const statusColor = {
     playing: 'green.500',
@@ -128,7 +129,7 @@ const SessionPage = () => {
                     Filter Periode
                 </Text>
                 {/* BUTTON PERIODE */}
-                <HStack>
+                <HStack wrap={'wrap'} gap={3}>
                     {periodeFilterData.map(val => (
                         <Button
                             key={val.periode}
@@ -144,10 +145,10 @@ const SessionPage = () => {
                 {/* BUTTON PERIODE CUSTOM*/}
                 {period === 'costum' && (
                     <HStack>
-                        <DatePickerUi value={startDate} onChange={(e)=> setStartDate(e.value)} />
+                        <DatePickerUi value={startDate} onChange={e => setStartDate(e.value)} />
 
                         <Text color="fg.muted">→</Text>
-                        <DatePickerUi value={endDate} onChange={(e)=> setEndDate(e.value)} />
+                        <DatePickerUi value={endDate} onChange={e => setEndDate(e.value)} />
 
                         <Button colorPalette={'cyan'} variant={'surface'} onClick={handleFilterByRentang}>
                             Terapkan
@@ -159,7 +160,7 @@ const SessionPage = () => {
                     Filter Status
                 </Text>
 
-                <HStack>
+                <HStack wrap={'wrap'} gap={3}>
                     {statusFilterData.map(val => (
                         <Button
                             key={val.status}
@@ -193,10 +194,7 @@ const SessionPage = () => {
                 mb={10}
             >
                 {loading ? (
-                    <VStack colorPalette="teal" mt={10} display={'flex'} alignItems={'center'}>
-                        <Spinner color="colorPalette.600" />
-                        <Text color="colorPalette.600">Loading...</Text>
-                    </VStack>
+                    <SpinnerJsx />
                 ) : items.length === 0 ? (
                     <EmptyState />
                 ) : (
