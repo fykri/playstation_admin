@@ -1,6 +1,6 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { useEffect, useState } from 'react';
-import { HStack, Button, VStack, Text, Table, Box, Tag } from '@chakra-ui/react';
+import { HStack, Button, VStack, Text, Table, Box, Tag, Badge } from '@chakra-ui/react';
 import { filterSession, filterSessionByRentang } from '@/api/session';
 import DatePickerUi from '@/components/DatePicker';
 import usePagination from '@/hooks/usePaginations';
@@ -14,10 +14,10 @@ import { setDate } from '@/utils/formatDate';
 import SpinnerJsx from '@/components/Spinner';
 
 const statusColor = {
-    playing: 'green.500',
-    booking: 'blue.500',
+    playing: 'green',
+    booking: 'orange',
     finished: 'white',
-    cancel: 'red.500',
+    cancel: 'red',
 };
 
 const periodeFilterData = [
@@ -224,8 +224,10 @@ const SessionPage = () => {
                                             <Table.Cell>{formatDateTime(val.end_time)}</Table.Cell>
                                             <Table.Cell>{val.total_billing} Jam</Table.Cell>
                                             <Table.Cell>Rp. {formatRupiah(val.total_price)}</Table.Cell>
-                                            <Table.Cell color={statusColor[val.status]}>
-                                                {formatStatusToId(val.status)}
+                                            <Table.Cell>
+                                                <Badge colorPalette={statusColor[val.status]} variant={'surface'}>
+                                                    {formatStatusToId(val.status)}
+                                                </Badge>
                                             </Table.Cell>
                                         </Table.Row>
                                     ))}
