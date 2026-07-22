@@ -3,50 +3,142 @@ const throwStatus = require('../utils/throwStatus');
 
 const selectRevenue = async (period, start, end) => {
     try {
-        let where = '';
+        let currentWhere = '';
+        let previousWhere = '';
         const values = [];
 
         switch (period) {
             case 'today':
-                where = `
+                currentWhere = `
                     start_time >= CURRENT_DATE
                     AND start_time < CURRENT_DATE + INTERVAL '1 day'
+                `;
+
+                previousWhere = `
+                    start_time >= CURRENT_DATE - INTERVAL '1 day'
+                    AND start_time < CURRENT_DATE
                 `;
                 break;
 
             case 'week':
-                where = `
+                currentWhere = `
                     start_time >= date_trunc('week', CURRENT_DATE)
                     AND start_time < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week'
+                `;
+
+                previousWhere = `
+                    start_time >= date_trunc('week', CURRENT_DATE) - INTERVAL '1 week'
+                    AND start_time < date_trunc('week', CURRENT_DATE)
                 `;
                 break;
 
             case 'month':
-                where = `
+                currentWhere = `
                     start_time >= date_trunc('month', CURRENT_DATE)
                     AND start_time < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month'
+                `;
+
+                previousWhere = `
+                    start_time >= date_trunc('month', CURRENT_DATE) - INTERVAL '1 month'
+                    AND start_time < date_trunc('month', CURRENT_DATE)
+                `;
+                break;
+
+            case 'year':
+                currentWhere = `
+                    start_time >= date_trunc('year', CURRENT_DATE)
+                    AND start_time < date_trunc('year', CURRENT_DATE) + INTERVAL '1 year'
+                `;
+
+                previousWhere = `
+                    start_time >= date_trunc('year', CURRENT_DATE) - INTERVAL '1 year'
+                    AND start_time < date_trunc('year', CURRENT_DATE)
                 `;
                 break;
 
             case 'custom':
-                where = `
+                currentWhere = `
                     start_time >= $1
                     AND start_time < $2
                 `;
+
                 values.push(start, end);
                 break;
 
             default:
-                where = 'TRUE';
+                currentWhere = 'TRUE';
+                previousWhere = 'FALSE';
         }
 
         const query = `
             SELECT
-                COALESCE(SUM(CASE WHEN status = 'finished' THEN total_price END), 0) AS total_pendapatan,
-                COALESCE(SUM(CASE WHEN status = 'finished' THEN total_billing END), 0) AS total_durasi,
-                COUNT(*) AS total_session
-            FROM session
-            WHERE ${where};
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN status = 'finished'
+                            AND ${currentWhere}
+                            THEN total_price
+                        END
+                    ), 0
+                ) AS total_pendapatan,
+
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN status = 'finished'
+                            AND ${currentWhere}
+                            THEN total_billing
+                        END
+                    ), 0
+                ) AS total_durasi,
+
+                COUNT(
+                    CASE
+                        WHEN status = 'finished'
+                        AND ${currentWhere}
+                        THEN 1
+                    END
+                ) AS total_session,
+
+                ${
+                    period !== 'custom'
+                        ? `
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN status = 'finished'
+                            AND ${previousWhere}
+                            THEN total_price
+                        END
+                    ), 0
+                ) AS previous_pendapatan,
+
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN status = 'finished'
+                            AND ${previousWhere}
+                            THEN total_billing
+                        END
+                    ), 0
+                ) AS previous_durasi,
+
+                COUNT(
+                    CASE
+                        WHEN status = 'finished'
+                        AND ${previousWhere}
+                        THEN 1
+                    END
+                ) AS previous_session
+                `
+                        : `
+                0 AS previous_pendapatan,
+                0 AS previous_durasi,
+                0 AS previous_session
+                `
+                }
+
+            FROM session;
         `;
 
         const result = await pool.query(query, values);
@@ -57,9 +149,31 @@ const selectRevenue = async (period, start, end) => {
             WHERE status = 'used'
         `);
 
+        const data = result.rows[0];
+
+        const calculateGrowth = (current, previous) => {
+            current = Number(current);
+            previous = Number(previous);
+
+            if (previous === 0) {
+                if (current === 0) return 0;
+                return null;
+            }
+
+            return Number((((current - previous) / previous) * 100).toFixed(2));
+        };
+
         return {
-            ...result.rows[0],
-            station_aktif: station.rows[0].station_aktif,
+            total_pendapatan: Number(data.total_pendapatan),
+            total_durasi: Number(data.total_durasi),
+            total_session: Number(data.total_session),
+            station_aktif: Number(station.rows[0].station_aktif),
+
+            pendapatan_growth: calculateGrowth(data.total_pendapatan, data.previous_pendapatan),
+
+            session_growth: calculateGrowth(data.total_session, data.previous_session),
+
+            durasi_growth: calculateGrowth(data.total_durasi, data.previous_durasi),
         };
     } catch (error) {
         throw error;
