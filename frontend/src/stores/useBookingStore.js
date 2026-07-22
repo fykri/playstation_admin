@@ -10,6 +10,12 @@ export const useBookingStore = create((set, get) => ({
             const result = await getBookingTableActive();
             set({
                 bookingItems: [...result.data],
+                //bookingItems: result.data.map((val)=> {
+                //    return {
+                //        ...val,
+                //        isPlay: true
+                //    }
+                //})
             });
         } catch (error) {
             console.log(error);

@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import DatePickerUi from '@/components/DatePicker';
 import { getWithDate } from '@/api/booking';
 import usePagination from '@/hooks/usePaginations';
-import { useBookingStore } from '@/stores/useBookingStore';
-import { useShallow } from 'zustand/shallow';
 import EmptyState from '@/components/EmptyState';
 import SpinnerJsx from '@/components/Spinner';
 import Paginations from '@/components/Paginations';
@@ -41,7 +39,6 @@ const parseYear = string => {
 
 const valueTableHeader = ['Nama Station', 'Nama Pelanggan', 'Tanggal Booking', 'Jam Booking', 'Status', 'Detail'];
 
-
 const HistoryBooking = () => {
     const [selectedMonth, setselectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(() => parseDate([`${new Date().getFullYear()}-01-01`]));
@@ -62,7 +59,6 @@ const HistoryBooking = () => {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         if (selectedMonth && selectedYear) {
@@ -111,7 +107,15 @@ const HistoryBooking = () => {
             ) : items.length === 0 ? (
                 <EmptyState description="belum ada pelanggan yang booking di bulan ini" title="Data booking kosong" />
             ) : (
-                <Box>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems={'center'}
+                    mt={2}
+                    justifyContent="space-between"
+                    minH="max-content"
+                    mb={10}
+                >
                     <Table.Root size={'md'} tableLayout={'fixed'} mb={5} variant="outline" rounded={'md'}>
                         <Table.Header bg={'blackAlpha.300'}>
                             <Table.Row bg={'none'}>
@@ -135,7 +139,9 @@ const HistoryBooking = () => {
                                         <Table.Cell>{val?.booking_date}</Table.Cell>
                                         <Table.Cell>{`${String(val?.booking_start).slice(0, 5)} -- ${String(val?.booking_end).slice(0, 5)}`}</Table.Cell>
                                         <Table.Cell>
-                                            <Badge colorPalette={statusColor[val?.status]} variant={'surface'}>{formatStatusToId(val?.status)}</Badge>
+                                            <Badge colorPalette={statusColor[val?.status]} variant={'surface'}>
+                                                {formatStatusToId(val?.status)}
+                                            </Badge>
                                         </Table.Cell>
                                         <Table.Cell>
                                             <Link

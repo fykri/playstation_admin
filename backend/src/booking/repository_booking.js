@@ -14,7 +14,6 @@ const checkCrash = async (payload, id_booking) => {
     `;
     const values = [id_station, booking_date, booking_start, booking_end, id_booking || null];
     const result = await pool.query(query, values);
-    console.log(result.rows);
     return result.rowCount > 0;
 };
 
@@ -63,7 +62,7 @@ const selectBookingActive = async () => {
 const selectBookingForTableActive = async () => {
     try {
         const result = await pool.query(
-            "SELECT b.id_booking, b.id_station, s.name_station, b.customer_name, b.booking_start::time, b.booking_end::time, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date, b.status, b.number_phone from booking b INNER JOIN station s ON b.id_station = s.id_station INNER JOIN console c ON c.id_console = s.id_console WHERE b.status = 'booking' ORDER BY b.created_at DESC",
+            "SELECT b.id_booking, b.id_station, s.name_station, b.customer_name, b.booking_start::time, b.booking_end::time, TO_CHAR(b.booking_date, 'YYYY-MM-DD') as booking_date, b.status, b.number_phone from booking b INNER JOIN station s ON b.id_station = s.id_station INNER JOIN console c ON c.id_console = s.id_console WHERE b.status IN ('booking', 'playing')  ORDER BY b.created_at DESC",
         );
         return result.rows;
     } catch (error) {
@@ -152,6 +151,77 @@ const selectBookingWithDate = async (year, month) => {
     }
 };
 
+const upsertBooking = async (id_station, time) => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // 1) Update booking -> playing
+        const bookingUpdate = await client.query(
+            "UPDATE booking SET status='playing' WHERE id_station=$1 AND status='booking' RETURNING *",
+            [id_station],
+        );
+
+        if (bookingUpdate.rowCount === 0) {
+            throwStatus('Booking aktif untuk station ini tidak ditemukan', 404);
+        }
+
+        // 2) Update station -> used, billing = time
+        const stationUpdate = await client.query(
+            "UPDATE station SET status='used', billing=$1 WHERE id_station=$2 RETURNING *",
+            [time, id_station],
+        );
+
+        if (stationUpdate.rowCount === 0) {
+            throwStatus('Station tidak ditemukan', 404);
+        }
+
+        // 3) Tambahkan data session dengan id_station & time
+        const intervalString = `${time} hour`;
+
+        // Ambil hourly_price
+        const priceQuery = await client.query(
+            `SELECT c.hourly_price
+       FROM station s
+       JOIN console c ON s.id_console = c.id_console
+       WHERE s.id_station = $1`,
+            [id_station],
+        );
+
+        if (priceQuery.rowCount === 0) {
+            throwStatus('station atau console tidak ditemukan', 404);
+        }
+
+        const total_price = Number(priceQuery.rows[0].hourly_price) * Number(time);
+
+        const sessionInsert = await client.query(
+            `INSERT INTO session (id_station, start_time, end_time, total_price, total_billing)
+       VALUES ($1, NOW(), NOW() + $2::INTERVAL, $3, $4)
+       RETURNING *`,
+            [id_station, intervalString, total_price, time],
+        );
+
+        if (sessionInsert.rowCount === 0) {
+            throwStatus('gagal menambahkan session', 400);
+        }
+
+        await client.query('COMMIT');
+
+        return {
+            id_station,
+            time: Number(time),
+            booking: bookingUpdate.rows[0],
+            station: stationUpdate.rows[0],
+            session: sessionInsert.rows[0],
+        };
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 module.exports = {
     insertBooking,
     selectBookingActive,
@@ -161,4 +231,6 @@ module.exports = {
     updateDataBooking,
     updateStatusCancel,
     selectBookingWithDate,
+    upsertBooking,
+    checkCrash
 };

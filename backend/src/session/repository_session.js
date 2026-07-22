@@ -17,21 +17,42 @@ const updateSessionForCancel = async id_station => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
+
+        // 1. Batalkan booking aktif jika ada
+        const booking = await client.query(
+            "SELECT id_booking FROM booking WHERE id_station = $1 AND status = 'playing'",
+            [id_station], // Gunakan array []
+        );
+
+
+        if (booking.rowCount > 0) {
+            await client.query("UPDATE booking SET status = 'cancel' WHERE id_booking = $1", [
+                booking.rows[0].id_booking,
+            ]);
+        }
+
+        // 2. Update status station
         const result1 = await client.query(
-            "UPDATE station s SET status = 'available', billing = 1 FROM session se WHERE se.id_station = s.id_station AND se.id_station=$1 AND se.status IN('playing', 'paused')",
+            "UPDATE station s SET status = 'available', billing = 1 FROM session se WHERE se.id_station = s.id_station AND se.id_station = $1 AND se.status IN ('playing', 'paused')",
             [id_station],
         );
+
+        // 3. Update status session
         const result2 = await client.query(
-            "UPDATE session SET status = 'cancel' WHERE id_station = $1 AND status IN('playing', 'paused')",
+            "UPDATE session SET status = 'cancel' WHERE id_station = $1 AND status IN ('playing', 'paused')",
             [id_station],
         );
-        if (result1.rowCount === 0 || result2.rowCount === 0) throwStatus('gagal membatalkan billing: ', 400);
+
+        if (result1.rowCount === 0 || result2.rowCount === 0) {
+            throwStatus('Gagal membatalkan billing: Tidak ada session aktif.', 400);
+        }
+
         await client.query('COMMIT');
     } catch (error) {
         await client.query('ROLLBACK');
         throw error;
     } finally {
-        await client.release();
+        client.release();
     }
 };
 
@@ -139,10 +160,10 @@ const selectSessionPlaying = async () => {
         const result = await pool.query(
             "SELECT se.id_session, se.start_time, se.end_time, st.name_station from SESSION se INNER JOIN station st ON se.id_station = st.id_station WHERE se.status='playing'",
         );
-        if(result.rowCount === 0) throwStatus('tidak ada station yang aktif', 404)
-        return result.rows
+        if (result.rowCount === 0) throwStatus('tidak ada station yang aktif', 404);
+        return result.rows;
     } catch (error) {
-        throw error
+        throw error;
     }
 };
 
@@ -152,5 +173,5 @@ module.exports = {
     updateSessionForAddBilling,
     selectDataByPeriode,
     selectDataByRentang,
-    selectSessionPlaying
+    selectSessionPlaying,
 };

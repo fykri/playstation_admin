@@ -1,7 +1,7 @@
 export const statusColor = {
     playing: 'green',
     booking: 'orange',
-    finished: 'white',
+    finish: 'blue',
     cancel: 'red',
     expired: 'yellow',
 };
@@ -16,7 +16,7 @@ const statusBooking = [
         title: 'Bermain',
     },
     {
-        status: 'finished',
+        status: 'finish',
         title: 'Selesai',
     },
     {

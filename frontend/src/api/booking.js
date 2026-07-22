@@ -107,3 +107,19 @@ export const getWithDate = async (year, month) => {
         }
     }
 };
+
+export const playBooking = async (id_station, time) => {
+    try {
+        const result = await api.post('/booking/play-booking', {
+            id_station: id_station,
+            time: time,
+        });
+        return result
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};

@@ -16,7 +16,7 @@ import SpinnerJsx from '@/components/Spinner';
 const statusColor = {
     playing: 'green',
     booking: 'orange',
-    finished: 'white',
+    finished: 'blue',
     cancel: 'red',
 };
 
@@ -225,8 +225,8 @@ const SessionPage = () => {
                                             <Table.Cell>{val.total_billing} Jam</Table.Cell>
                                             <Table.Cell>Rp. {formatRupiah(val.total_price)}</Table.Cell>
                                             <Table.Cell>
-                                                <Badge colorPalette={statusColor[val.status]} variant={'surface'}>
-                                                    {formatStatusToId(val.status)}
+                                                <Badge colorPalette={statusColor[val?.status]} variant={'surface'}>
+                                                    {formatStatusToId(val?.status)}
                                                 </Badge>
                                             </Table.Cell>
                                         </Table.Row>

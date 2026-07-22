@@ -107,7 +107,21 @@ const getConsolesWithAvailability = async (id_console = null) => {
 
 const upsertStation = async (id_station, time) => {
     try {
-        const intervalString = `${time} hour`;
+        const start_time = new Date();
+        const date = start_time.toISOString().split('T')[0];
+        const end_time = new Date(start_time.getTime() + time * 60 * 60 * 1000);
+        const overlap = await pool.query(
+            `SELECT * FROM booking 
+            WHERE id_station = $1 
+            AND booking_date = $2 
+            AND status = 'booking'
+            AND booking_start < $4 
+            AND booking_end > $3`,
+            [id_station, date, start_time.toISOString(), end_time.toISOString()],
+        );
+        if (overlap.rowCount > 0)
+            throwStatus('station bentrok dengan jadwal booking pelanggan lain, harap cek di menu booking');
+
         const stationResult = await pool.query(
             "UPDATE station SET status='used', billing=$1 WHERE id_station=$2 AND status='available' RETURNING *",
             [time, id_station],
@@ -125,7 +139,7 @@ const upsertStation = async (id_station, time) => {
         if (priceQuery.rowCount === 0) throwStatus('station atau console tidak ditemukan', 404);
 
         const total_price = priceQuery.rows[0].hourly_price * Number(time);
-
+        const intervalString = `${time} hour`;
         const result = await pool.query(
             'INSERT INTO session (id_station, start_time, end_time, total_price, total_billing) VALUES ($1, NOW(), NOW() + $2::INTERVAL ,$3, $4)',
             [id_station, intervalString, total_price, time],
@@ -138,6 +152,12 @@ const upsertStation = async (id_station, time) => {
 
 const updateStatusForFinish = async id_station => {
     try {
+        const booking = await pool.query("SELECT id_booking FROM booking WHERE id_station=$1 AND status='playing'", [
+            id_station,
+        ]);
+        if (booking.rowCount > 0) {
+            await pool.query("UPDATE booking SET status='finish' WHERE id_booking=$1", [booking.rows[0].id_booking]);
+        }
         const updateStation = await pool.query(
             "UPDATE station SET status = 'available' WHERE id_station = $1 RETURNING *",
             [id_station],

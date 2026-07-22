@@ -1,30 +1,34 @@
-import { IconButton } from "@chakra-ui/react";
-import { MdEditSquare, MdDelete } from "react-icons/md";
-const EditDeleteButton = ({onClickEdit, onCLickDelete}) => {
+import { IconButton } from '@chakra-ui/react';
+import { MdEditSquare, MdDelete } from 'react-icons/md';
+const EditDeleteButton = ({ onClickEdit, onCLickDelete, disabled, loading }) => {
     return (
         <>
             <IconButton
-                size={"xs"}
+                size={'xs'}
                 aria-label="edit"
-                bg={"blue.600"}
+                bg={'blue.600'}
+                loading={loading}
                 _hover={{
-                    bg: "blue.700",
+                    bg: 'blue.700',
                 }}
-                color={"white"}
-                rounded={"md"}
+                color={'white'}
+                rounded={'md'}
                 onClick={onClickEdit}
             >
                 <MdEditSquare />
             </IconButton>
+
             <IconButton
-                size={"xs"}
+                size={'xs'}
                 aria-label="delete"
-                bg={"red.600"}
+                disabled={disabled}
+                loading={loading}
+                bg={'red.600'}
                 _hover={{
-                    bg: "red.700",
+                    bg: 'red.700',
                 }}
                 onClick={onCLickDelete}
-                color={"white"}
+                color={'white'}
             >
                 <MdDelete />
             </IconButton>

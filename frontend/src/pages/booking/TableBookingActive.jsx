@@ -8,12 +8,14 @@ import DialogLayout from '@/layout/DialogLayout';
 import BookingDetail from './DetailBooking';
 import { useBookingStore } from '@/stores/useBookingStore';
 import { useShallow } from 'zustand/shallow';
-import { updateBookingExpired, cancelBooking } from '@/api/booking';
+import { updateBookingExpired, cancelBooking, playBooking } from '@/api/booking';
 import BookingDialog from './BookingDialog';
 import { toaster } from '@/components/ui/toaster';
 import AlertDialog from '@/components/dialog/AlertDialog';
 import EmptyState from '@/components/EmptyState';
+import { FaInfo } from 'react-icons/fa';
 import { getBookingStatus, formatStatusToId, statusColor } from '@/utils/bookingUtlis';
+import HoverCardComponent from '@/components/HoverCard';
 
 const valueTableHeader = [
     'Nama Station',
@@ -41,7 +43,6 @@ const TableBookingActive = () => {
     useEffect(() => {
         fetchDataBooking();
     }, []);
-
     const handleStatusExpired = async id_booking => {
         try {
             await updateBookingExpired(id_booking);
@@ -70,6 +71,26 @@ const TableBookingActive = () => {
         } catch (error) {
             toaster.create({
                 title: error.message,
+                type: 'error',
+            });
+        } finally {
+            setSelectedIdBooking('');
+            setLoading(false);
+        }
+    };
+
+    const handlePlayBooking = async (id_station, billing) => {
+        setLoading(true);
+        try {
+            await playBooking(id_station, billing);
+            toaster.create({
+                description: 'Berhasil memulai booking. untuk informasi lebih lanjut. lihat di station',
+                type: 'success',
+            });
+            await fetchDataBooking();
+        } catch (error) {
+            toaster.create({
+                description: error.message,
                 type: 'error',
             });
         } finally {
@@ -116,7 +137,15 @@ const TableBookingActive = () => {
             {bookingItems.length === 0 ? (
                 <EmptyState description="Silakan tambahkan data booking terlebih dahulu" title="Data booking kosong" />
             ) : (
-                <Box>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems={'center'}
+                    mt={2}
+                    justifyContent="space-between"
+                    minH="max-content"
+                    mb={10}
+                >
                     <Table.Root size={'md'} tableLayout={'fixed'} mb={5} variant="outline" rounded={'md'}>
                         <Table.Header bg={'blackAlpha.300'}>
                             <Table.Row bg={'none'}>
@@ -150,37 +179,56 @@ const TableBookingActive = () => {
                                         </Table.Cell>
                                         <Table.Cell>
                                             <HStack gap={2}>
-                                                <IconButton
-                                                    size={'xs'}
-                                                    aria-label="edit"
-                                                    bg={'green.600'}
-                                                    _hover={{
-                                                        bg: 'green.700',
-                                                    }}
-                                                    color={'white'}
-                                                    rounded={'md'}
-                                                    disabled={!booking?.canStart}
-                                                >
-                                                    <FaPlay />
-                                                </IconButton>
-                                                <EditDeleteButton
-                                                    onClickEdit={() => {
-                                                        setEditData({
-                                                            id_booking: val?.id_booking,
-                                                            customer_name: val?.customer_name,
-                                                            station: val?.id_station,
-                                                            booking_date: val?.booking_date,
-                                                            booking_start: String(val?.booking_start).slice(0, 5),
-                                                            duration: Number(val?.billing),
-                                                            number_phone: val?.number_phone,
-                                                        });
-                                                        setOpenEditDialog(true);
-                                                    }}
-                                                    onCLickDelete={() => {
-                                                        setOpenAlertDialog(true);
-                                                        setSelectedIdBooking(val?.id_booking);
-                                                    }}
-                                                />
+                                                {val?.status === 'booking' ? (
+                                                    <>
+                                                        <IconButton
+                                                            size={'xs'}
+                                                            aria-label="edit"
+                                                            bg={'green.600'}
+                                                            _hover={{
+                                                                bg: 'green.700',
+                                                            }}
+                                                            color={'white'}
+                                                            loading={loading}
+                                                            rounded={'md'}
+                                                            disabled={!booking?.canStart}
+                                                            onClick={() =>
+                                                                handlePlayBooking(val?.id_station, val?.billing)
+                                                            }
+                                                        >
+                                                            <FaPlay />
+                                                        </IconButton>
+                                                        <EditDeleteButton
+                                                            onClickEdit={() => {
+                                                                setEditData({
+                                                                    id_booking: val?.id_booking,
+                                                                    customer_name: val?.customer_name,
+                                                                    station: val?.id_station,
+                                                                    booking_date: val?.booking_date,
+                                                                    booking_start: String(val?.booking_start).slice(
+                                                                        0,
+                                                                        5,
+                                                                    ),
+                                                                    duration: Number(val?.billing),
+                                                                    number_phone: val?.number_phone,
+                                                                });
+                                                                setOpenEditDialog(true);
+                                                            }}
+                                                            disabled={val?.status !== 'booking'}
+                                                            loading={loading}
+                                                            onCLickDelete={() => {
+                                                                setOpenAlertDialog(true);
+                                                                setSelectedIdBooking(val?.id_booking);
+                                                            }}
+                                                        />
+                                                    </>
+                                                ) : (
+                                                    <HoverCardComponent>
+                                                        <Box p={2} rounded={'md'} color={'orange'}>
+                                                            <FaInfo />
+                                                        </Box>
+                                                    </HoverCardComponent>
+                                                )}
                                             </HStack>
                                         </Table.Cell>
                                         <Table.Cell>

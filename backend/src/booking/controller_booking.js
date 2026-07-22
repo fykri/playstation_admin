@@ -8,6 +8,7 @@ const {
     updateBooking,
     cancelBooking,
     getBookingWithDate,
+    playBooking,
 } = require('./services_booking');
 router.post('/', async (req, res, next) => {
     try {
@@ -124,6 +125,21 @@ router.get('/filter-date', async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: 'berhasil mendapatkan data',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/play-booking', async (req, res, next) => {
+    try {
+        const { id_station, time } = req.body;
+        console.log('req body: ', req.body);
+        const result = await playBooking(id_station, time);
+        res.status(200).json({
+            success: true,
+            message: 'booking berhasil di mulai, cek station buat info lebih lanjut',
             data: result,
         });
     } catch (error) {

@@ -9,6 +9,7 @@ const {
     updateDataBooking,
     updateStatusCancel,
     selectBookingWithDate,
+    upsertBooking,
 } = require('./repository_booking');
 const { formatHours } = require('../utils/formatTime');
 const getTimeDifference = require('../utils/getTimeDifference');
@@ -165,7 +166,7 @@ const updateBooking = async (
 
 const cancelBooking = async id_booking => {
     try {
-        isUUID(id_booking);
+        isUUID({ id_booking });
         return await updateStatusCancel(id_booking);
     } catch (error) {
         throw error;
@@ -201,6 +202,21 @@ const getBookingWithDate = async (year, month) => {
     }
 };
 
+const playBooking = async (id_station, time) => {
+    try {
+        validateNotEmpty({ id_station, time });
+        isUUID(id_station);
+
+        if (!Number.isInteger(Number(time)) || Number(time) <= 0) {
+            throwStatus('time harus bilangan bulat lebih dari 0', 400);
+        }
+
+        return await upsertBooking(id_station, time);
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     addBooking,
     getBookingActive,
@@ -210,4 +226,5 @@ module.exports = {
     updateBooking,
     cancelBooking,
     getBookingWithDate,
+    playBooking,
 };
