@@ -1,46 +1,66 @@
 const pool = require('../../database/db');
 const throwStatus = require('../utils/throwStatus');
 
-const selectRevenue = async period => {
+const selectRevenue = async (period, start, end) => {
     try {
-        let where = `status = 'finished'`;
+        let where = '';
+        const values = [];
 
         switch (period) {
             case 'today':
-                where += `
-            AND start_time >= CURRENT_DATE
-            AND start_time < CURRENT_DATE + INTERVAL '1 day'
-        `;
+                where = `
+                    start_time >= CURRENT_DATE
+                    AND start_time < CURRENT_DATE + INTERVAL '1 day'
+                `;
                 break;
 
             case 'week':
-                where += `
-            AND start_time >= date_trunc('week', CURRENT_DATE)
-            AND start_time < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week'
-        `;
+                where = `
+                    start_time >= date_trunc('week', CURRENT_DATE)
+                    AND start_time < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week'
+                `;
                 break;
 
             case 'month':
-                where += `
-            AND start_time >= date_trunc('month', CURRENT_DATE)
-            AND start_time < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month'
-        `;
+                where = `
+                    start_time >= date_trunc('month', CURRENT_DATE)
+                    AND start_time < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month'
+                `;
                 break;
 
             case 'custom':
-                where += `
-            AND start_time BETWEEN $1 AND $2
-        `;
+                where = `
+                    start_time >= $1
+                    AND start_time < $2
+                `;
+                values.push(start, end);
                 break;
+
+            default:
+                where = 'TRUE';
         }
 
         const query = `
-            SELECT COALESCE(SUM(total_price), 0) AS total_revenue
+            SELECT
+                COALESCE(SUM(CASE WHEN status = 'finished' THEN total_price END), 0) AS total_pendapatan,
+                COALESCE(SUM(CASE WHEN status = 'finished' THEN total_billing END), 0) AS total_durasi,
+                COUNT(*) AS total_session
             FROM session
-            WHERE ${where}
+            WHERE ${where};
         `;
-        const result = await pool.query(query);
-        return result.rows[0];
+
+        const result = await pool.query(query, values);
+
+        const station = await pool.query(`
+            SELECT COUNT(*) AS station_aktif
+            FROM station
+            WHERE status = 'used'
+        `);
+
+        return {
+            ...result.rows[0],
+            station_aktif: station.rows[0].station_aktif,
+        };
     } catch (error) {
         throw error;
     }
