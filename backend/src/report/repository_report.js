@@ -180,6 +180,117 @@ const selectRevenue = async (period, start, end) => {
     }
 };
 
+const selectDailyIncome = async () => {
+    try {
+        const query = `
+            WITH days AS (
+                SELECT generate_series(1, 7) AS day_number
+            )
+            SELECT
+                CASE days.day_number
+                    WHEN 1 THEN 'Sen'
+                    WHEN 2 THEN 'Sel'
+                    WHEN 3 THEN 'Rab'
+                    WHEN 4 THEN 'Kam'
+                    WHEN 5 THEN 'Jum'
+                    WHEN 6 THEN 'Sab'
+                    WHEN 7 THEN 'Min'
+                END AS label,
+                COALESCE(SUM(s.total_price), 0) AS total_revenue
+            FROM days
+            LEFT JOIN session s
+                ON EXTRACT(ISODOW FROM s.start_time) = days.day_number
+                AND s.status = 'finished'
+                AND s.start_time >= date_trunc('week', CURRENT_DATE)
+                AND s.start_time < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week'
+            GROUP BY days.day_number
+            ORDER BY days.day_number;
+        `;
+
+        const result = await pool.query(query);
+
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const selectStationRevenue = async (period, start, end) => {
+    try {
+        let where = '';
+        const values = [];
+
+        switch (period) {
+            case 'today':
+                where = `
+                    se.start_time >= CURRENT_DATE
+                    AND se.start_time < CURRENT_DATE + INTERVAL '1 day'
+                `;
+                break;
+
+            case 'week':
+                where = `
+                    se.start_time >= date_trunc('week', CURRENT_DATE)
+                    AND se.start_time < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week'
+                `;
+                break;
+
+            case 'month':
+                where = `
+                    se.start_time >= date_trunc('month', CURRENT_DATE)
+                    AND se.start_time < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month'
+                `;
+                break;
+
+            case 'year':
+                where = `
+                    se.start_time >= date_trunc('year', CURRENT_DATE)
+                    AND se.start_time < date_trunc('year', CURRENT_DATE) + INTERVAL '1 year'
+                `;
+                break;
+
+            case 'custom':
+                where = `
+                    se.start_time >= $1
+                    AND se.start_time < $2
+                `;
+                values.push(start, end);
+                break;
+
+            default:
+                throwStatus(
+                    `Periode tidak valid: ${period}. Pilihan yang tersedia adalah today, week, month, year, atau custom.`,
+                );
+        }
+
+        const query = `
+            SELECT
+                st.name_station,
+                COUNT(se.id_session) AS total_session,
+                COALESCE(SUM(se.total_price), 0) AS revenue
+            FROM station st
+            LEFT JOIN session se
+                ON st.id_station = se.id_station
+                AND se.status = 'finished'
+                AND ${where}
+            GROUP BY
+                st.id_station,
+                st.name_station
+            ORDER BY
+                revenue DESC,
+                st.name_station ASC;
+        `;
+
+        const result = await pool.query(query, values);
+
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     selectRevenue,
+    selectDailyIncome,
+    selectStationRevenue
 };
