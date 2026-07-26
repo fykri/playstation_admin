@@ -2,6 +2,7 @@ const pool = require('../../database/db');
 const throwStatus = require('../utils/throwStatus');
 
 const selectRevenue = async (period, start, end) => {
+
     try {
         let currentWhere = '';
         let previousWhere = '';
@@ -56,7 +57,7 @@ const selectRevenue = async (period, start, end) => {
                 `;
                 break;
 
-            case 'custom':
+            case 'costum':
                 currentWhere = `
                     start_time >= $1
                     AND start_time < $2
@@ -101,7 +102,7 @@ const selectRevenue = async (period, start, end) => {
                 ) AS total_session,
 
                 ${
-                    period !== 'custom'
+                    period !== 'costum'
                         ? `
                 COALESCE(
                     SUM(
@@ -176,6 +177,7 @@ const selectRevenue = async (period, start, end) => {
             durasi_growth: calculateGrowth(data.total_durasi, data.previous_durasi),
         };
     } catch (error) {
+        console.log('error: ', error)
         throw error;
     }
 };

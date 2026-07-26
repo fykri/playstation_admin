@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import { getRevenue } from '@/api/report';
 import { toaster } from '@/components/ui/toaster';
 import RevenueReportComponent from './components/RevenueCard';
+import DatePickerUi from '@/components/DatePicker';
+import { setDate } from '@/utils/formatDate';
+
 const periodeFilterData = [
     {
         periode: 'today',
@@ -28,15 +31,15 @@ const periodeFilterData = [
 const RevenueReport = () => {
     const [selectedPeriod, setSelectedPeriod] = useState('today');
     const [revenueItems, setRevenueItems] = useState({});
-
-    console.log('selected period: ', selectedPeriod);
-    console.log('revenueItems: ', revenueItems);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleRevenueItems = async () => {
         try {
-            const result = await getRevenue(selectedPeriod);
+            const result = await getRevenue(selectedPeriod, setDate(startDate[0]), setDate(endDate[0]));
             setRevenueItems(result?.data);
         } catch (error) {
+            toaster.dismiss();
             toaster.create({
                 title: error.message,
                 type: error,
@@ -45,6 +48,7 @@ const RevenueReport = () => {
     };
 
     useEffect(() => {
+        if (selectedPeriod === 'costum') return;
         handleRevenueItems();
     }, [selectedPeriod]);
 
@@ -69,6 +73,18 @@ const RevenueReport = () => {
                     </Button>
                 ))}
             </HStack>
+            {selectedPeriod === 'costum' && (
+                <HStack mt={3}>
+                    <DatePickerUi value={startDate} onChange={e => setStartDate(e.value)} />
+
+                    <Text color="fg.muted">→</Text>
+                    <DatePickerUi value={endDate} onChange={e => setEndDate(e.value)} />
+
+                    <Button colorPalette={'cyan'} variant={'surface'} onClick={handleRevenueItems}>
+                        Terapkan
+                    </Button>
+                </HStack>
+            )}
             <RevenueReportComponent data={revenueItems} />
         </Box>
     );

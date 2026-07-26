@@ -1,9 +1,9 @@
 import api from './axios';
 
-export const getRevenue = async period => {
+export const getRevenue = async (period, start, end) => {
     try {
         const result = await api.get('/report/revenue', {
-            params: { period },
+            params: { period, start, end },
         });
         return result.data;
     } catch (error) {
