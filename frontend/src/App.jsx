@@ -8,7 +8,7 @@ import Console from './pages/Console';
 import Station from './pages/Station';
 import SessionPage from './pages/Session';
 import Booking from './pages/booking/Booking';
-import Report from './pages/Report';
+import ReportPages from './pages/Report/Report';
 function App() {
     return (
         <Routes>
@@ -21,7 +21,7 @@ function App() {
                     <Route path="/station" element={<Station />}></Route>
                     <Route path="/session" element={<SessionPage />}></Route>
                     <Route path="/booking" element={<Booking />}></Route>
-                    <Route patch="/report" element={<Report />}></Route>
+                    <Route path="/report" element={<ReportPages />}></Route>
                 </Route>
             </Route>
         </Routes>
