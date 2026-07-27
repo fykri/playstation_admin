@@ -159,8 +159,8 @@ const updateStatusForFinish = async id_station => {
             await pool.query("UPDATE booking SET status='finish' WHERE id_booking=$1", [booking.rows[0].id_booking]);
         }
         const updateStation = await pool.query(
-            "UPDATE station SET status = 'available' WHERE id_station = $1 RETURNING *",
-            [id_station],
+            "UPDATE station SET status = 'available', billing = $2 WHERE id_station = $1 RETURNING *",
+            [id_station, 1],
         );
         if (updateStation.rowCount === 0) throwStatus('gagal update station', 400);
         const updateSession = await pool.query(
