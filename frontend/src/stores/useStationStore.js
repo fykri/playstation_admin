@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import { startbilling } from '@/api/station';
+import { startbilling, getAllStation } from '@/api/station';
 import { toaster } from '@/components/ui/toaster';
-import { getAllStation } from '@/api/station';
 export const useBillingStore = create((set, get) => ({
     stationItems: [],
     loadingStoreStation: false,
