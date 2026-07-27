@@ -1,6 +1,7 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { Grid, Box, GridItem } from '@chakra-ui/react';
 import RevenueReport from './revenueReport';
+import DailyIncomeReport from './DailyIncome';
 const ReportPages = () => {
     return (
         <NavbarLayout header={'REPORT'}>
@@ -12,7 +13,7 @@ const ReportPages = () => {
                     borderWidth={'1px'}
                     borderColor={'gray.800'}
                     borderRadius={'md'}
-                    py={2}
+                    py={3}
                     px={3}
                 >
                     <RevenueReport />
@@ -40,7 +41,9 @@ const ReportPages = () => {
                     py={2}
                     px={3}
                     shadow={'xs'}
-                />
+                >
+                    <DailyIncomeReport/>
+                </Box>
             </Grid>
         </NavbarLayout>
     );
