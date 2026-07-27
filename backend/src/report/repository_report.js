@@ -251,7 +251,7 @@ const selectStationRevenue = async (period, start, end) => {
                 `;
                 break;
 
-            case 'custom':
+            case 'costum':
                 where = `
                     se.start_time >= $1
                     AND se.start_time < $2
@@ -267,6 +267,7 @@ const selectStationRevenue = async (period, start, end) => {
 
         const query = `
             SELECT
+                st.id_station,
                 st.name_station,
                 COUNT(se.id_session) AS total_session,
                 COALESCE(SUM(se.total_price), 0) AS revenue

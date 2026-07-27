@@ -50,7 +50,6 @@ const RevenueReportComponent = ({ data = {} }) => {
     ];
     return (
         <HStack
-            mt={4}
             gap={3}
             justifyContent={'center'}
             flexWrap={'wrap'}
