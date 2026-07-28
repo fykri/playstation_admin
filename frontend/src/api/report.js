@@ -29,3 +29,18 @@ export const getRevenueStation = async (period, start, end) => {
         }
     }
 };
+
+
+
+export const getDailyIncome = async () => {
+    try {
+        const result = await api.get('/report/daily-income');
+        return result.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};

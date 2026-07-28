@@ -1,6 +1,7 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { Grid, Box, GridItem, Text, HStack, Button } from '@chakra-ui/react';
 import RevenueReport from './revenueReport';
+import StationRevenue from './StationRevenue';
 import DailyIncomeReport from './DailyIncome';
 import { useState, useEffect } from 'react';
 import DatePickerUi from '@/components/DatePicker';
@@ -103,7 +104,9 @@ const ReportPages = () => {
                         borderRadius={'md'}
                         py={2}
                         px={3}
-                    />
+                    >
+                        <DailyIncomeReport/>
+                    </Box>
                 </GridItem>
                 <Box
                     maxH={'285px'}
@@ -116,7 +119,7 @@ const ReportPages = () => {
                     px={3}
                     shadow={'xs'}
                 >
-                    <DailyIncomeReport />
+                    <StationRevenue />
                 </Box>
             </Grid>
         </NavbarLayout>
