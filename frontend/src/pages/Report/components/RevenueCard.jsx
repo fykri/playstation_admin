@@ -17,6 +17,7 @@ const renderGrowth = growthValue => {
 };
 
 const RevenueReportComponent = ({ data = {} }) => {
+    console.log('data: ', data)
     const cardItems = [
         {
             id: 1,
@@ -41,11 +42,10 @@ const RevenueReportComponent = ({ data = {} }) => {
         },
         {
             id: 4,
-            label: 'Station Aktif',
-            value: `${data.station_aktif} Station`,
+            label: 'rata rata pendapatan',
+            value: `Rp. ${formatRupiah(data.rata_rata_session)}`,
             growth: null,
-            customSubtext: data.station_aktif === 0 ? 'Semua unit nganggur' : `${data.station_aktif} unit terpakai`,
-            color: data.station_aktif > 0 ? 'green.500' : 'gray.500',
+            customSubtext: 'session',
         },
     ];
     return (

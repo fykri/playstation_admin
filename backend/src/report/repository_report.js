@@ -2,7 +2,6 @@ const pool = require('../../database/db');
 const throwStatus = require('../utils/throwStatus');
 
 const selectRevenue = async (period, start, end) => {
-
     try {
         let currentWhere = '';
         let previousWhere = '';
@@ -101,6 +100,30 @@ const selectRevenue = async (period, start, end) => {
                     END
                 ) AS total_session,
 
+                COALESCE(
+                    ROUND(
+                        SUM(
+                            CASE
+                                WHEN status = 'finished'
+                                AND ${currentWhere}
+                                THEN total_price
+                            END
+                        )::numeric
+                        /
+                        NULLIF(
+                            COUNT(
+                                CASE
+                                    WHEN status = 'finished'
+                                    AND ${currentWhere}
+                                    THEN 1
+                                END
+                            ),
+                            0
+                        )
+                    ),
+                    0
+                ) AS rata_rata_session,
+
                 ${
                     period !== 'costum'
                         ? `
@@ -144,12 +167,6 @@ const selectRevenue = async (period, start, end) => {
 
         const result = await pool.query(query, values);
 
-        const station = await pool.query(`
-            SELECT COUNT(*) AS station_aktif
-            FROM station
-            WHERE status = 'used'
-        `);
-
         const data = result.rows[0];
 
         const calculateGrowth = (current, previous) => {
@@ -168,7 +185,7 @@ const selectRevenue = async (period, start, end) => {
             total_pendapatan: Number(data.total_pendapatan),
             total_durasi: Number(data.total_durasi),
             total_session: Number(data.total_session),
-            station_aktif: Number(station.rows[0].station_aktif),
+            rata_rata_session: Number(data.rata_rata_session),
 
             pendapatan_growth: calculateGrowth(data.total_pendapatan, data.previous_pendapatan),
 
@@ -177,7 +194,7 @@ const selectRevenue = async (period, start, end) => {
             durasi_growth: calculateGrowth(data.total_durasi, data.previous_durasi),
         };
     } catch (error) {
-        console.log('error: ', error)
+        console.log('error: ', error);
         throw error;
     }
 };
@@ -295,5 +312,5 @@ const selectStationRevenue = async (period, start, end) => {
 module.exports = {
     selectRevenue,
     selectDailyIncome,
-    selectStationRevenue
+    selectStationRevenue,
 };
