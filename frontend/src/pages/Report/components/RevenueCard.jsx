@@ -58,7 +58,7 @@ const RevenueReportComponent = ({ data = {} }) => {
             {Object.keys(data).length > 0
                 ? cardItems.map(card => (
                       <Box
-                          bg={'#191930'}
+                          bg={'var(--color-card)'}
                           minW={'36'}
                           h={'20'}
                           rounded={'sm'}

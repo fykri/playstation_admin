@@ -24,12 +24,15 @@ const station = require('./src/station/controller_station');
 const session = require('./src/session/controller_session');
 const booking = require('./src/booking/controller_booking')
 const report = require('./src/report/controller_report')
+const dashboard = require('./src/dashboard/controller_dashboard')
 app.use('/auth', authUser);
 app.use('/station', station);
 app.use('/consoles', consoles);
 app.use('/session', session);
 app.use('/booking', booking);
 app.use('/report', report)
+app.use('/dashboard', dashboard)
+
 
 //app.get("/test", verifyToken, (req, res, next) => {
 //    try {
