@@ -43,8 +43,6 @@ const Dashboard = () => {
         }
     };
 
-    console.log('montlyIncome', monthlyIncome);
-
     const chart = useChart({
         data: [...monthlyIncome] || [],
         series: [{ name: 'revenue', color: 'teal.solid' }],
