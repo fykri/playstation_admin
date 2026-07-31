@@ -132,7 +132,7 @@ const Dashboard = () => {
                             tickLine={false}
                             tickMargin={10}
                             stroke={chart.color('border')}
-                            tickFormatter={value => `Rp.${formatRupiah(value)}`}
+                            tickFormatter={value => `Rp.${formatRupiah(value) || 0}`}
                         />
                         <Tooltip animationDuration={100} cursor={false} content={<Chart.Tooltip />} />
                         {chart.series.map(item => (
