@@ -278,7 +278,7 @@ const Dashboard = () => {
                                 <EmptyDataDashboard
                                     icon={<LuLayoutGrid />}
                                     title={'Tidak Ada Booking Tersedia'}
-                                    desc={emptyData}
+                                    desc={emptyBooking}
                                 />
                             ) : (
                                 booking.map(val => (
