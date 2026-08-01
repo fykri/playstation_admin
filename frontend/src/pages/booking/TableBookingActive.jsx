@@ -40,6 +40,7 @@ const TableBookingActive = () => {
     const { page, setPage, currentData, pageSize } = usePagination(bookingItems, 15);
     const [openEditDialog, setOpenEditDialog] = useState(false);
 
+    console.log('booking: ', bookingItems)
     useEffect(() => {
         fetchDataBooking();
     }, []);

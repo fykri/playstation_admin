@@ -1,5 +1,5 @@
 const pool = require('../../database/db');
-
+const throwStatus = require('../utils/throwStatus');
 const selectDashboardStat = async () => {
     try {
         const query = `
@@ -76,4 +76,20 @@ const selectMonthlyIncome = async () => {
     }
 };
 
-module.exports = { selectDashboardStat, selectMonthlyIncome};
+const selectStationStatusPlaying = async () => {
+    const result = await pool.query(
+        `SELECT s.id_station,s.status, st.name_station, c.package, s.end_time FROM SESSION s INNER JOIN station st ON s.id_station = st.id_station INNER JOIN console c ON c.id_console = st.id_console WHERE s.status = 'playing'`,
+    );
+    if (result.rowCount === 0) throwStatus('Belum ada station yang sedang aktif saat ini.', 404);
+    return result.rows;
+};
+
+const selectBookingActive = async () => {
+    const result = await pool.query(
+        `SELECT id_booking, booking_start::time, booking_end::time, customer_name FROM booking WHERE status IN ('booking', 'playing') AND booking_start >= CURRENT_DATE AND booking_start < CURRENT_DATE + INTERVAL '1 day'`,
+    );
+    if (result.rowCount === 0) throwStatus('Belum ada booking yang sedang aktif saat ini.', 404);
+    return result.rows;
+};
+
+module.exports = { selectDashboardStat, selectMonthlyIncome, selectStationStatusPlaying, selectBookingActive };

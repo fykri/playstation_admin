@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import PersistLogin from './components/authcompt/PersistLogin';
 import ProtectedRoute from './components/authcompt/ProtectedRoute';
-import DashboardPage from './pages/Dashboard';
+import DashboardPage from './pages/Dashboard/Dashboard';
 import Console from './pages/Console';
 import Station from './pages/Station';
 import SessionPage from './pages/Session';

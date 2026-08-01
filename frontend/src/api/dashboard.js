@@ -24,3 +24,30 @@ export const getMonthlyIncome = async () => {
         }
     }
 };
+
+export const getEndTimeStation = async () => {
+    try {
+        const result = await api.get('/dashboard/end-time');
+        return result.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};
+
+export const getActiveBooking = async () => {
+    try {
+        const result = await api.get('/dashboard/active-booking');
+        return result.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw error.response.data || 'Terjadi kesalahan';
+        } else {
+            throw error;
+        }
+    }
+};
+
