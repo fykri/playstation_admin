@@ -36,7 +36,7 @@ const Dashboard = () => {
 
     const handleDashboardStat = async () => {
         setLoadingDashboardStat(true);
-        toaster.dismiss()
+        toaster.dismiss();
         try {
             const result = await getDashboardStat();
             setStatItems(result.data);
@@ -51,9 +51,12 @@ const Dashboard = () => {
     };
 
     const handleMonthlyIncome = async () => {
-        setLoadingMontlyIncome(true);
-        toaster.dismiss()
+        toaster.dismiss();
+        let timer;
         try {
+            timer = setTimeout(() => {
+                setLoadingMontlyIncome(true);
+            }, 150);
             const result = await getMonthlyIncome();
             setMonthLyIncome(result.data);
         } catch (error) {
@@ -62,6 +65,7 @@ const Dashboard = () => {
                 title: error.message,
             });
         } finally {
+            clearTimeout(timer);
             setLoadingMontlyIncome(false);
         }
     };
