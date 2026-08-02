@@ -1,5 +1,5 @@
 import NavbarLayout from '@/layout/navbarLayout';
-import { Box, Card, HStack, Text, Heading, Circle, Status } from '@chakra-ui/react';
+import { Box, Card, HStack, Text, Heading, Circle, Status, Skeleton } from '@chakra-ui/react';
 import { LuMonitorCheck, LuGamepad2, LuCalendarCheck, LuHistory, LuHandCoins, LuLayoutGrid } from 'react-icons/lu';
 import { getDashboardStat, getMonthlyIncome, getEndTimeStation, getActiveBooking } from '@/api/dashboard';
 import { toaster } from '@/components/ui/toaster';
@@ -31,9 +31,11 @@ const Dashboard = () => {
     const [booking, setBooking] = useState([]);
     const [emptyData, setEmptyData] = useState('');
     const [emptyBooking, setEmptyBooking] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loadingMontlyIncome, setLoadingMontlyIncome] = useState(false);
+    const [loadingDashboardStat, setLoadingDashboardStat] = useState(false);
+
     const handleDashboardStat = async () => {
-        setLoading(true);
+        setLoadingDashboardStat(true);
         try {
             const result = await getDashboardStat();
             setStatItems(result.data);
@@ -43,12 +45,12 @@ const Dashboard = () => {
                 title: error.message,
             });
         } finally {
-            setLoading(false);
+            setLoadingDashboardStat(false);
         }
     };
 
     const handleMonthlyIncome = async () => {
-        setLoading(true);
+        setLoadingMontlyIncome(true);
         try {
             const result = await getMonthlyIncome();
             setMonthLyIncome(result.data);
@@ -58,7 +60,7 @@ const Dashboard = () => {
                 title: error.message,
             });
         } finally {
-            setLoading(false);
+            setLoadingMontlyIncome(false);
         }
     };
     const handleGetEndTime = async () => {
@@ -70,14 +72,12 @@ const Dashboard = () => {
         }
     };
 
-    //console.log('booking: ', booking)
     const handleGetActiveBooking = async () => {
         try {
             const result = await getActiveBooking();
-            console.log('result: ', result)
             setBooking(result.data);
         } catch (error) {
-            console.log(error)
+            console.log(error);
             setEmptyBooking(error.message);
         }
     };
@@ -151,9 +151,10 @@ const Dashboard = () => {
                                     {val.icon}
                                 </Circle>
                             </Box>
-                            <Box>
+
+                            <Skeleton loading={loadingDashboardStat}>
                                 <Heading size={'xl'}>{val.value}</Heading>
-                            </Box>
+                            </Skeleton>
                         </Card.Body>
                     </Card.Root>
                 ))}
@@ -163,41 +164,43 @@ const Dashboard = () => {
             <Box display={'flex'} gap={5} mt={5} flexDirection={'column'} lg={{ flexDirection: 'row' }} mb={5}>
                 {/* CARTS */}
                 <Box bg={'var(--color-card)'} rounded={'md'} shadow={'md'} lg={{ w: '70%' }} flex={3}>
-                    <Chart.Root maxH="md" chart={chart} px={12} py={5}>
-                        <LineChart data={chart.data} responsive>
-                            <CartesianGrid stroke={chart.color('gray.700')} strokeDasharray="3 3" />
-                            <XAxis
-                                axisLine={false}
-                                dataKey={chart.key('label')}
-                                tickFormatter={value => value.slice(0, 3)}
-                                stroke={chart.color('border')}
-                                label={{ value: 'Bulan', position: 'bottom' }}
-                            />
-                            <YAxis
-                                axisLine={false}
-                                tickLine={false}
-                                tickMargin={10}
-                                stroke={chart.color('border')}
-                                tickFormatter={value => `Rp.${formatRupiah(value) || 0}`}
-                            />
-                            <Tooltip
-                                animationDuration={100}
-                                cursor={false}
-                                content={<Chart.Tooltip />}
-                                formatter={(value, name) => [`Rp.${formatRupiah(value)}`, name]}
-                            />
-                            {chart.series.map(item => (
-                                <Line
-                                    key={item.name}
-                                    isAnimationActive={false}
-                                    dataKey={chart.key(item.name)}
-                                    stroke={chart.color(item.color)}
-                                    strokeWidth={2}
-                                    dot={{ strokeDasharray: '0' }}
+                    <Skeleton loading={loadingMontlyIncome}>
+                        <Chart.Root maxH="md" chart={chart} px={12} py={5}>
+                            <LineChart data={chart.data} responsive>
+                                <CartesianGrid stroke={chart.color('gray.700')} strokeDasharray="3 3" />
+                                <XAxis
+                                    axisLine={false}
+                                    dataKey={chart.key('label')}
+                                    tickFormatter={value => value.slice(0, 3)}
+                                    stroke={chart.color('border')}
+                                    label={{ value: 'Bulan', position: 'bottom' }}
                                 />
-                            ))}
-                        </LineChart>
-                    </Chart.Root>
+                                <YAxis
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    stroke={chart.color('border')}
+                                    tickFormatter={value => `Rp.${formatRupiah(value) || 0}`}
+                                />
+                                <Tooltip
+                                    animationDuration={100}
+                                    cursor={false}
+                                    content={<Chart.Tooltip />}
+                                    formatter={(value, name) => [`Rp.${formatRupiah(value)}`, name]}
+                                />
+                                {chart.series.map(item => (
+                                    <Line
+                                        key={item.name}
+                                        isAnimationActive={false}
+                                        dataKey={chart.key(item.name)}
+                                        stroke={chart.color(item.color)}
+                                        strokeWidth={2}
+                                        dot={{ strokeDasharray: '0' }}
+                                    />
+                                ))}
+                            </LineChart>
+                        </Chart.Root>
+                    </Skeleton>
                 </Box>
                 {/* END CARTS */}
 
