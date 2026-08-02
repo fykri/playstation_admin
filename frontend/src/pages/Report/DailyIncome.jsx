@@ -8,7 +8,6 @@ import { Area, AreaChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'r
 const DailyIncomeReport = () => {
     const [dailyIncomeItems, setDailyIncomeItems] = useState([]);
     const [loading, setLoading] = useState(false);
-    console.log('dailyIncomeItems: ', dailyIncomeItems);
     const chart = useChart({
         data: [...dailyIncomeItems],
         series: [{ label: 'pendapatan harian', name: 'total_revenue', color: 'teal.solid' }],
@@ -16,6 +15,7 @@ const DailyIncomeReport = () => {
 
     const handleDailyIncome = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             const result = await getDailyIncome();
             setDailyIncomeItems(

@@ -86,6 +86,7 @@ const CardBodyStationUsed = ({ id_station = '', onExpiredChange }) => {
             await addBilling(id_station, hours);
             onExpiredChange?.(false);
             await getTimeSession();
+            toaster.dismiss();
             toaster.create({
                 title: `berhasil tambah waktu ${hours}`,
                 type: 'success',
@@ -105,6 +106,7 @@ const CardBodyStationUsed = ({ id_station = '', onExpiredChange }) => {
         try {
             const result = await finishStation(id_station);
             await fetchStation()
+            toaster.dismiss()
             toaster.create({
                 type: 'success',
                 title: result.message,

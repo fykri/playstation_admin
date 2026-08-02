@@ -1,6 +1,6 @@
 import NavbarLayout from '@/layout/NavbarLayout';
 import { useEffect, useState } from 'react';
-import { HStack, Button, VStack, Text, Table, Box, Tag, Badge } from '@chakra-ui/react';
+import { HStack, Button, VStack, Text, Table, Box, Tag, Badge, ToastDescription } from '@chakra-ui/react';
 import { filterSession, filterSessionByRentang } from '@/api/session';
 import DatePickerUi from '@/components/DatePicker';
 import usePagination from '@/hooks/usePaginations';
@@ -103,6 +103,7 @@ const SessionPage = () => {
 
     const handleFilterByRentang = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             if (!startDate || !endDate) {
                 toaster.create({

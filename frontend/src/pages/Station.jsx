@@ -73,6 +73,7 @@ const Station = () => {
 
     const addStation = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             validateData({ console: selectedConsole[0], name_station: nameConsole });
             await postDataStation({ id_console: selectedConsole[0], name_station: nameConsole });
@@ -96,6 +97,7 @@ const Station = () => {
 
     const deleteStation = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             await deleteDataStation(deleteField.id_station);
             toaster.create({
@@ -115,6 +117,7 @@ const Station = () => {
     };
     const editStation = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             await updateStation(idStationEdit, { id_console: selectedConsole[0], name_station: nameConsole });
             toaster.create({

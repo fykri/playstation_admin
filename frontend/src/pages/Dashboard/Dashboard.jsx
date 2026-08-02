@@ -36,6 +36,7 @@ const Dashboard = () => {
 
     const handleDashboardStat = async () => {
         setLoadingDashboardStat(true);
+        toaster.dismiss()
         try {
             const result = await getDashboardStat();
             setStatItems(result.data);
@@ -51,6 +52,7 @@ const Dashboard = () => {
 
     const handleMonthlyIncome = async () => {
         setLoadingMontlyIncome(true);
+        toaster.dismiss()
         try {
             const result = await getMonthlyIncome();
             setMonthLyIncome(result.data);

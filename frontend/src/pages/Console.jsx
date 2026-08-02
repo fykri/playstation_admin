@@ -134,6 +134,7 @@ const Console = () => {
 
     const handleUpdate = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             validateData(formEdit);
             const oldItem = dataConsole.find(item => item.id_console === editId);
@@ -164,6 +165,7 @@ const Console = () => {
 
     const handleDeleteData = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             await deleteConsole(fieldDeleteConsole.id_console);
             toaster.create({

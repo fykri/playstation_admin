@@ -55,6 +55,7 @@ const TableBookingActive = () => {
 
     const handleCancelBooking = async () => {
         setLoading(true);
+        toaster.dismiss()
         try {
             if (!selectedIdBooking) {
                 toaster.create({
@@ -82,6 +83,7 @@ const TableBookingActive = () => {
 
     const handlePlayBooking = async (id_station, billing) => {
         setLoading(true);
+        toaster.dismiss();
         try {
             await playBooking(id_station, billing);
             toaster.create({
