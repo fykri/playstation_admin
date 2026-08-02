@@ -79,7 +79,6 @@ const Dashboard = () => {
             const result = await getActiveBooking();
             setBooking(result.data);
         } catch (error) {
-            console.log(error);
             setEmptyBooking(error.message);
         }
     };

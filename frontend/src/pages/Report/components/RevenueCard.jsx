@@ -17,7 +17,6 @@ const renderGrowth = growthValue => {
 };
 
 const RevenueReportComponent = ({ data = {} }) => {
-    console.log('data: ', data)
     const cardItems = [
         {
             id: 1,
