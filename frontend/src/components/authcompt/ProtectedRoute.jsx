@@ -4,7 +4,6 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
     const { accessToken } = useContext(AuthContext);
-
     return accessToken ? <Outlet /> : <Navigate to="/" replace />;
 };
 

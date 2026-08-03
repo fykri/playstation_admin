@@ -11,7 +11,6 @@ const PersistLogin = () => {
         const verifyRefreshToken = async () => {
             try {
                 const data = await refreshToken();
-
                 setAccessToken(data.data);
             } catch (error) {
                 console.log("User not logged in");

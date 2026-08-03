@@ -2,36 +2,40 @@ const jwt = require("jsonwebtoken");
 const throwStatus = require("../../utils/throwStatus");
 
 const verifyToken = (req, res, next) => {
-    try {
-        const authHeader =
-            req.headers["authorization"] || req.headers["Authorization"];
-        if (!authHeader) throwStatus("Authorization header missing", 401);
+    console.log('req.headers.authorization: ', req.headers.authorization)
+    const authHeader =
+        req.headers.authorization || req.headers.Authorization;
 
-        const token = authHeader.split(" ")[1];
-        if (!token) throwStatus("Token not provided", 401);
+    if (!authHeader) {
+        return next(throwStatus("Authorization header missing", 401));
+    }
 
-        //const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
-            if (err) {
-                // Handle error spesifik
-                if (err.name === "TokenExpiredError") {
-                    throwStatus("Token expired", 401);
-                } else if (err.name === "JsonWebTokenError") {
-                    throwStatus("Invalid token", 401);
-                } else {
-                    throwStatus("Unauthorized", 401);
-                }
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+        return next(throwStatus("Token not provided", 401));
+    }
+
+    jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
+        if (err) {
+            if (err.name === "TokenExpiredError") {
+                return next(throwStatus("Token expired", 401));
             }
 
-            req.user = {
-                id: decoded.user_id,
-                username: decoded.username,
-            };
-            next();
-        });
-    } catch (err) {
-        next(err);
-    }
+            if (err.name === "JsonWebTokenError") {
+                return next(throwStatus("Invalid token", 401));
+            }
+
+            return next(throwStatus("Unauthorized", 401));
+        }
+
+        req.user = {
+            id: decoded.user_id,
+            username: decoded.username,
+        };
+
+        next();
+    });
 };
 
 module.exports = verifyToken;

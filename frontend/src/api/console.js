@@ -1,8 +1,8 @@
-import api from './axios';
+import axiosInstance from './axiosInterceptor';
 
 export const getAllConsole = async () => {
     try {
-        const { data } = await api.get('/consoles');
+        const { data } = await axiosInstance.get('/consoles');
         return data.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -15,7 +15,7 @@ export const getAllConsole = async () => {
 
 export const postConsole = async data => {
     try {
-        const result = await api.post('/consoles', data);
+        const result = await axiosInstance.post('/consoles', data);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -27,7 +27,7 @@ export const postConsole = async data => {
 };
 export const deleteConsole = async id_console => {
     try {
-        const result = await api.delete(`/consoles/delete-data/${id_console}`);
+        const result = await axiosInstance.delete(`/consoles/delete-data/${id_console}`);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -40,7 +40,7 @@ export const deleteConsole = async id_console => {
 
 export const updateConsole = async (id_console, data) => {
     try {
-        const result = await api.patch(`/consoles/${id_console}`, data);
+        const result = await axiosInstance.patch(`/consoles/${id_console}`, data);
         return result;
     } catch (error) {
         if (error.response && error.response.data) {

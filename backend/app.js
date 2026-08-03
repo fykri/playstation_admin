@@ -25,13 +25,13 @@ const session = require('./src/session/controller_session');
 const booking = require('./src/booking/controller_booking')
 const report = require('./src/report/controller_report')
 const dashboard = require('./src/dashboard/controller_dashboard')
-app.use('/auth', authUser);
-app.use('/station', station);
-app.use('/consoles', consoles);
-app.use('/session', session);
-app.use('/booking', booking);
-app.use('/report', report)
-app.use('/dashboard', dashboard)
+app.use('/auth',authUser);
+app.use('/station', verifyToken ,station);
+app.use('/consoles',verifyToken, consoles);
+app.use('/session', verifyToken, session);
+app.use('/booking',verifyToken ,booking);
+app.use('/report', verifyToken, report)
+app.use('/dashboard', verifyToken ,dashboard)
 
 
 //app.get("/test", verifyToken, (req, res, next) => {

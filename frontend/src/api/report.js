@@ -1,8 +1,8 @@
-import api from './axios';
+import axiosInstance from "./axiosInterceptor";
 
 export const getRevenue = async (period, start, end) => {
     try {
-        const result = await api.get('/report/revenue', {
+        const result = await axiosInstance.get('/report/revenue', {
             params: { period, start, end },
         });
         return result.data;
@@ -17,7 +17,7 @@ export const getRevenue = async (period, start, end) => {
 
 export const getRevenueStation = async (period, start, end) => {
     try {
-        const result = await api.get('/report/station-revenue', {
+        const result = await axiosInstance.get('/report/station-revenue', {
             params: { period, start, end },
         });
         return result.data;
@@ -30,11 +30,9 @@ export const getRevenueStation = async (period, start, end) => {
     }
 };
 
-
-
 export const getDailyIncome = async () => {
     try {
-        const result = await api.get('/report/daily-income');
+        const result = await axiosInstance.get('/report/daily-income');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {

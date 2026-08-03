@@ -1,8 +1,7 @@
-import api from './axios';
-
+import axiosInstance from "./axiosInterceptor";
 export const getEndTime = async id_station => {
     try {
-        const { data } = await api.get(`/session/time/${id_station}`);
+        const { data } = await axiosInstance.get(`/session/time/${id_station}`);
         return data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -15,7 +14,7 @@ export const getEndTime = async id_station => {
 
 export const cancelledStation = async id_station => {
     try {
-        const { data } = await api.patch(`/session/${id_station}/stop`);
+        const { data } = await axiosInstance.patch(`/session/${id_station}/stop`);
         return data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -28,7 +27,7 @@ export const cancelledStation = async id_station => {
 
 export const addBilling = async (id_station, time) => {
     try {
-        const result = await api.patch(`/session/add-billing/${id_station}`, { additionalHours: time });
+        const result = await axiosInstance.patch(`/session/add-billing/${id_station}`, { additionalHours: time });
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -41,7 +40,7 @@ export const addBilling = async (id_station, time) => {
 
 export const filterSession = async (periode, status) => {
     try {
-        const result = await api.get('/session/filter', {
+        const result = await axiosInstance.get('/session/filter', {
             params: {
                 periode: periode,
                 status: status,
@@ -59,12 +58,12 @@ export const filterSession = async (periode, status) => {
 
 export const filterSessionByRentang = async (startDate, endDate, status) => {
     try {
-        const result = await api.get('/session/filter-rentang', {
+        const result = await axiosInstance.get('/session/filter-rentang', {
             params: {
                 startDate,
                 endDate,
-                status
-            }
+                status,
+            },
         });
         return result.data;
     } catch (error) {
@@ -78,7 +77,7 @@ export const filterSessionByRentang = async (startDate, endDate, status) => {
 
 export const getSessionActive = async () => {
     try {
-        const result = await api.get('/session/session-playing');
+        const result = await axiosInstance.get('/session/session-playing');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {

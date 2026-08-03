@@ -1,7 +1,8 @@
-import api from './axios';
+import axiosInstance from './axiosInterceptor';
+
 export const getDashboardStat = async () => {
     try {
-        const result = await api.get('/dashboard/stat');
+        const result = await axiosInstance.get('/dashboard/stat');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -14,7 +15,7 @@ export const getDashboardStat = async () => {
 
 export const getMonthlyIncome = async () => {
     try {
-        const result = await api.get('/dashboard/monthly-income');
+        const result = await axiosInstance.get('/dashboard/monthly-income');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -27,7 +28,7 @@ export const getMonthlyIncome = async () => {
 
 export const getEndTimeStation = async () => {
     try {
-        const result = await api.get('/dashboard/end-time');
+        const result = await axiosInstance.get('/dashboard/end-time');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -40,7 +41,7 @@ export const getEndTimeStation = async () => {
 
 export const getActiveBooking = async () => {
     try {
-        const result = await api.get('/dashboard/active-booking');
+        const result = await axiosInstance.get('/dashboard/active-booking');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -50,4 +51,3 @@ export const getActiveBooking = async () => {
         }
     }
 };
-

@@ -1,7 +1,7 @@
-import api from './axios';
+import axiosInstance from "./axiosInterceptor";
 export const postBooking = async data => {
     try {
-        const result = await api.post('/booking', data);
+        const result = await axiosInstance.post('/booking', data);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -14,7 +14,7 @@ export const postBooking = async data => {
 
 export const getBookingActive = async () => {
     try {
-        const result = await api.get('/booking/booking-active');
+        const result = await axiosInstance.get('/booking/booking-active');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -27,7 +27,7 @@ export const getBookingActive = async () => {
 
 export const getBookingTableActive = async () => {
     try {
-        const result = await api.get('/booking/booking-table-active');
+        const result = await axiosInstance.get('/booking/booking-table-active');
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -40,7 +40,7 @@ export const getBookingTableActive = async () => {
 
 export const getBookingById = async id_booking => {
     try {
-        const result = await api.get(`/booking/booking-detail/${id_booking}`);
+        const result = await axiosInstance.get(`/booking/booking-detail/${id_booking}`);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -53,7 +53,7 @@ export const getBookingById = async id_booking => {
 
 export const updateBookingExpired = async id_booking => {
     try {
-        const result = await api.patch(`/booking/expired/${id_booking}`);
+        const result = await axiosInstance.patch(`/booking/expired/${id_booking}`);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -66,7 +66,7 @@ export const updateBookingExpired = async id_booking => {
 
 export const updateDataBooking = async (id_booking, data) => {
     try {
-        const result = await api.patch(`/booking/${id_booking}`, data);
+        const result = await axiosInstance.patch(`/booking/${id_booking}`, data);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -79,7 +79,7 @@ export const updateDataBooking = async (id_booking, data) => {
 
 export const cancelBooking = async id_booking => {
     try {
-        const result = await api.delete(`/booking/${id_booking}`);
+        const result = await axiosInstance.delete(`/booking/${id_booking}`);
         return result.data;
     } catch (error) {
         if (error.response && error.response.data) {
@@ -92,7 +92,7 @@ export const cancelBooking = async id_booking => {
 
 export const getWithDate = async (year, month) => {
     try {
-        const result = await api.get('booking/filter-date', {
+        const result = await axiosInstance.get('booking/filter-date', {
             params: {
                 year: year,
                 month: month,
@@ -110,11 +110,11 @@ export const getWithDate = async (year, month) => {
 
 export const playBooking = async (id_station, time) => {
     try {
-        const result = await api.post('/booking/play-booking', {
+        const result = await axiosInstance.post('/booking/play-booking', {
             id_station: id_station,
             time: time,
         });
-        return result
+        return result;
     } catch (error) {
         if (error.response && error.response.data) {
             throw error.response.data || 'Terjadi kesalahan';
