@@ -9,7 +9,6 @@ import Paginations from '@/components/Paginations';
 import { formatRupiah } from '@/utils/formatNumber';
 import { toaster } from '@/components/ui/toaster';
 import EmptyState from '@/components/EmptyState';
-import SearchInput from '@/components/input/InputSearch';
 import { setDate } from '@/utils/formatDate';
 import SpinnerJsx from '@/components/Spinner';
 
@@ -183,7 +182,6 @@ const SessionPage = () => {
                         <Tag.Label>{formatStatusToId(status)}</Tag.Label>
                     </Tag.Root>
                 </HStack>
-                <Box>{items.length > 0 ? <SearchInput /> : null}</Box>
             </HStack>
             <Box
                 display="flex"
