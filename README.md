@@ -252,6 +252,12 @@ ACCESS_TOKEN=your_access_token_secret
 REFRESH_TOKEN=your_refresh_token_secret
 ```
 
+Buat file `.env` di dalam folder `frontend`:
+
+```env
+VITE_BASE_API =
+```
+
 ### 3. Jalankan Migration
 
 Jalankan seluruh migration yang tersedia pada project:
@@ -259,8 +265,6 @@ Jalankan seluruh migration yang tersedia pada project:
 ```bash
 npm run migrate
 ```
-
-> Perintah migration dapat berbeda tergantung konfigurasi project.
 
 Setelah migration selesai, database akan memiliki struktur tabel yang dibutuhkan oleh aplikasi.
 
@@ -281,7 +285,7 @@ Setelah migration selesai, database akan memiliki struktur tabel yang dibutuhkan
 
 Disarankan untuk menyediakan `.env.example`:
 
-```env
+```env backend
 PORT=3000
 
 DB_HOST=localhost
@@ -294,6 +298,9 @@ ACCESS_TOKEN=your_access_token_secret
 REFRESH_TOKEN=your_refresh_token_secret
 ```
 
+```env frontend
+VITE_BASE_API = 3000
+```
 ---
 
 ## 🚀 Instalasi
