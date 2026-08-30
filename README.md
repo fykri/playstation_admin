@@ -14,16 +14,6 @@
 
 🔗 **Live Demo:** `Coming Soon`
 
-### 🔐 Akun Demo
-
-Jika aplikasi membutuhkan login, gunakan akun demo berikut:
-
-| Role  | Email              | Password     |
-| ----- | ------------------ | ------------ |
-| Admin | `demo@example.com` | `Demo@12345` |
-
-> Akun tersebut dibuat khusus untuk keperluan demonstrasi dan tidak menggunakan data production.
-
 ---
 
 ## 📌 Tentang Project
