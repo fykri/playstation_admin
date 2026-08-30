@@ -391,7 +391,7 @@ http://localhost:5173
 
 ![Dashboard](./screenshot/dashboard-image.png)
 
-### Booking
+### Console
 
 ![Console](./screenshot/console-image.png)
 
@@ -399,13 +399,13 @@ http://localhost:5173
 
 ![Station](./screenshot/station-image.png)
 
-### Session
-
-![Session](./screenshot/session-image.png)
-
 ### Booking
 
 ![Booking](./screenshot/booking-image.png)
+
+### Session
+
+![Session](./screenshot/session-image.png)
 
 ### Report
 
